@@ -1,10 +1,11 @@
 package example
 
 import (
-	base "crypto-engine/x509"
+	"crypto-engine/x509"
 	"encoding/asn1"
 	"encoding/hex"
 	"fmt"
+	"reflect"
 	"testing"
 )
 
@@ -33,8 +34,13 @@ import (
 //}
 
 func Test_build(test *testing.T) {
-	result, _ := base.BuildPkcs7Data([]byte("dadsf"))
-	marshal, err := asn1.Marshal(result)
+	result, err := x509.BuildPkcs7Data([]byte("dadsf"), true)
+	if err != nil {
+		fmt.Println(err)
+	}
+	//todo 指针变对象
+	fmt.Println(reflect.TypeOf(*result))
+	marshal, err := asn1.Marshal(*result)
 	fmt.Println(err)
 	fmt.Println(hex.EncodeToString(marshal))
 
