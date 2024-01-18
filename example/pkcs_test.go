@@ -1,7 +1,7 @@
 package example
 
 import (
-	"crypto-engine/x509"
+	"crypto-engine/pkcs"
 	"encoding/asn1"
 	"encoding/hex"
 	"fmt"
@@ -34,7 +34,7 @@ import (
 //}
 
 func Test_build(test *testing.T) {
-	result, err := x509.BuildPkcs7Data([]byte("dadsf"), true)
+	result, err := pkcs.BuildPkcs7Data([]byte("dadsf"), true)
 	if err != nil {
 		fmt.Println(err)
 	}

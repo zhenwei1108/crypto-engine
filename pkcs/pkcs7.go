@@ -1,16 +1,10 @@
-package x509
+package pkcs
 
 import (
+	"crypto/x509"
+	"crypto/x509/pkix"
 	"encoding/asn1"
 )
-
-/*
-《GMT-0010 SM2 密码算法加密签名消息语法规范》
-*/
-type ContentInfo struct {
-	ContentType asn1.ObjectIdentifier
-	Content     asn1.RawValue
-}
 
 const (
 	Data = iota
@@ -44,8 +38,31 @@ var (
 		keyAgreementInfo:       asn1.ObjectIdentifier{1, 2, 840, 113549, 1, 7, 6}}
 )
 
-func BuildPkcs7Data(data []byte, isGM bool) (*ContentInfo, error) {
-	marshal, err := asn1.Marshal(data)
+/*
+《GMT-0010 SM2 密码算法加密签名消息语法规范》
+*/
+type ContentInfo struct {
+	ContentType asn1.ObjectIdentifier
+	Content     asn1.RawValue
+}
+
+type signedData struct {
+	version          int
+	digestAlgorithms []pkix.AlgorithmIdentifier "摘要算法标识"
+	contentInfo      ContentInfo                "原文"
+	certificates     []x509.Certificate         "证书/证书链"
+	crls             []asn1.RawValue            "吊销列表"
+	signerInfos      []SignerInfo               "签名信息"
+}
+
+type SignerInfo struct {
+	version               int
+	issuerAndSerialNumber IssuerAndSerialNumber
+	//todo
+}
+
+func BuildPkcs7Data(resource []byte, isGM bool) (*ContentInfo, error) {
+	marshal, err := asn1.Marshal(resource)
 	if err != nil {
 		return nil, err
 	}
@@ -55,4 +72,9 @@ func BuildPkcs7Data(data []byte, isGM bool) (*ContentInfo, error) {
 	}
 	return &ContentInfo{ContentType: contentOid,
 		Content: asn1.RawValue{Class: asn1.ClassContextSpecific, Tag: 0, Bytes: marshal, IsCompound: true}}, nil
+}
+
+func BuildPkcs7SignedData(data []byte) (*ContentInfo, error) {
+
+	return nil, nil
 }
