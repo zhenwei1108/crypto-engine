@@ -56,9 +56,12 @@ type signedData struct {
 }
 
 type SignerInfo struct {
-	version               int
-	issuerAndSerialNumber IssuerAndSerialNumber
-	//todo
+	version                   int
+	issuerAndSerialNumber     IssuerAndSerialNumber
+	attributes                []attribute "optional,tag:0"
+	digestEncryptionAlgorithm pkix.AlgorithmIdentifier
+	encryptDigest             asn1.RawValue
+	unauthenticatedAttributes []attribute "optional,tag:1"
 }
 
 func BuildPkcs7Data(resource []byte, isGM bool) (*ContentInfo, error) {
