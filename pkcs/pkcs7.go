@@ -56,12 +56,13 @@ type signedData struct {
 }
 
 type SignerInfo struct {
-	version                   int
-	issuerAndSerialNumber     IssuerAndSerialNumber
-	attributes                []attribute "optional,tag:0"
-	digestEncryptionAlgorithm pkix.AlgorithmIdentifier
-	encryptDigest             asn1.RawValue
-	unauthenticatedAttributes []attribute "optional,tag:1"
+	version                   int                      "版本"
+	issuerAndSerialNumber     IssuerAndSerialNumber    "颁发者信息"
+	digestAlgorithm           pkix.AlgorithmIdentifier "摘要算法"
+	attributes                []attribute              "optional,tag:0, 签名者属性"
+	digestEncryptionAlgorithm pkix.AlgorithmIdentifier "签名算法"
+	encryptDigest             asn1.RawValue            "签名值,SM2时是 SM2Signature"
+	unauthenticatedAttributes []attribute              "optional,tag:1"
 }
 
 func BuildPkcs7Data(resource []byte, isGM bool) (*ContentInfo, error) {
