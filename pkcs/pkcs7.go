@@ -78,7 +78,8 @@ func BuildPkcs7Data(resource []byte, isGM bool) (*ContentInfo, error) {
 		Content: asn1.RawValue{Class: asn1.ClassContextSpecific, Tag: 0, Bytes: marshal, IsCompound: true}}, nil
 }
 
-func BuildPkcs7SignedData(data []byte) (*ContentInfo, error) {
-
+func BuildPkcs7SignedData(resource []byte, cert []byte) (*ContentInfo, error) {
+	signedData, _ := asn1.Marshal(resource)
+	asn1.Marshal(signedData)
 	return nil, nil
 }
