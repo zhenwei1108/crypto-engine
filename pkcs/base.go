@@ -1,6 +1,7 @@
 package pkcs
 
 import (
+	"crypto/x509/pkix"
 	"encoding/asn1"
 	"math/big"
 )
@@ -13,4 +14,10 @@ type IssuerAndSerialNumber struct {
 type attribute struct {
 	attributeType  asn1.ObjectIdentifier
 	attributeValue asn1.RawValue
+}
+
+// 主题标识符
+type SubjectPublicKeyInfo struct {
+	algorithm        pkix.AlgorithmIdentifier
+	subjectPublicKey []byte
 }
