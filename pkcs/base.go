@@ -7,17 +7,17 @@ import (
 )
 
 type IssuerAndSerialNumber struct {
-	x500Name         asn1.RawValue "X500Name, 用于描述DN"
-	certSerialNumber *big.Int
+	X500Name         asn1.RawValue "X500Name, 用于描述DN"
+	CertSerialNumber *big.Int
 }
 
-type attribute struct {
-	attributeType  asn1.ObjectIdentifier
-	attributeValue asn1.RawValue
+type Attribute struct {
+	AttributeType  asn1.ObjectIdentifier
+	AttributeValue asn1.RawValue
 }
 
 // 主题标识符
 type SubjectPublicKeyInfo struct {
-	algorithm        pkix.AlgorithmIdentifier
-	subjectPublicKey []byte
+	Algorithm        pkix.AlgorithmIdentifier
+	SubjectPublicKey []byte
 }
