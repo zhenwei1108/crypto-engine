@@ -25,11 +25,11 @@ func Test_code_cert(t *testing.T) {
 
 }
 
-// todo go原生中包含cert结构 gg
 func Test_create_cert(t *testing.T) {
 	//sm2
 	alg := pkix.AlgorithmIdentifier{Algorithm: asn1.ObjectIdentifier{1, 2, 156, 10197, 1, 301, 1}}
-	dn := pkix.Name{Country: []string{"CN"}, CommonName: "adsf"}
+	SubjectName := pkix.Name{Country: []string{"CN"}, CommonName: "adsf"}.ToRDNSequence()
+	IssuerName := pkix.Name{Country: []string{"CN"}, CommonName: "Test Root"}.ToRDNSequence()
 	notBefore := time.Now()
 	validity := pkcs.Validity{notBefore, notBefore.AddDate(2, 0, 0)}
 	pub := make([]byte, 65)
@@ -43,7 +43,7 @@ func Test_create_cert(t *testing.T) {
 		IsCompound: true,
 	}
 	signAlg := pkix.AlgorithmIdentifier{Algorithm: asn1.ObjectIdentifier{1, 2, 156, 10197, 1, 501}}
-	tbs := pkcs.TBSCertificate{Version: version, SerialNumber: big.NewInt(123456), Signature: signAlg, Issuer: dn, Validity: validity, Subject: dn, SubjectPublicKeyInfo: info}
+	tbs := pkcs.TBSCertificate{Version: version, SerialNumber: big.NewInt(123456), Signature: signAlg, Issuer: IssuerName, Validity: validity, Subject: SubjectName, SubjectPublicKeyInfo: info}
 
 	//SM2Signature转为sequence
 	signature := pkcs.SM2Signature{R: big.NewInt(1234567890), S: big.NewInt(987654321)}
