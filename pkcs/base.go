@@ -19,12 +19,5 @@ type Attribute struct {
 // 主题标识符
 type SubjectPublicKeyInfo struct {
 	Algorithm        pkix.AlgorithmIdentifier
-	SubjectPublicKey []byte
-}
-
-// 扩展项,cert\crl
-type Extension struct {
-	ExtnID    asn1.ObjectIdentifier
-	Critical  bool
-	ExtnValue []byte
+	SubjectPublicKey asn1.BitString
 }
