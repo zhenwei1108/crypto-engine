@@ -16,16 +16,16 @@ type Certificate struct {
 }
 
 type TBSCertificate struct {
-	Version              asn1.RawValue `tag:"0" default:"V1" version:"V1(0) V2(1) V3(2)"`
+	Version              asn1.RawValue `asn1:"explicit,tag:0,default:0" version:"V1(0) V2(1) V3(2)"`
 	SerialNumber         *big.Int
 	Signature            pkix.AlgorithmIdentifier //签名算法
 	Issuer               pkix.RDNSequence
 	Validity             Validity
 	Subject              pkix.RDNSequence
-	SubjectPublicKeyInfo SubjectPublicKeyInfo `struct:"SubjectPublicKeyInfo"` //公钥信息
-	IssuerUniqueID       asn1.RawValue        `asn1:"optional,tag:1"`         // omitempty 指定此基础字段不被编码，   asn1:"optional“表示asn1不编码
+	SubjectPublicKeyInfo SubjectPublicKeyInfo //公钥信息
+	IssuerUniqueID       asn1.RawValue        `asn1:"optional,tag:1"` // omitempty 指定此基础字段不被编码，   asn1:"optional“表示asn1不编码
 	SubjectUniqueID      asn1.RawValue        `asn1:"optional,tag:2" desc:"如果出现，版本选择V3"`
-	Extensions           []Extension          `asn1:"optional,tag:2" desc:"如果出现，版本选择V3"`
+	Extensions           []pkix.Extension     `asn1:"optional,explicit,tag:3" desc:"如果出现，版本选择V3"`
 }
 
 // 有效期

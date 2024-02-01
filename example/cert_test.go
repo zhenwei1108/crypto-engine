@@ -32,7 +32,7 @@ func Test_create_cert(t *testing.T) {
 	IssuerName := pkix.Name{Country: []string{"CN"}, CommonName: "Test Root"}.ToRDNSequence()
 	notBefore := time.Now()
 	validity := pkcs.Validity{notBefore, notBefore.AddDate(2, 0, 0)}
-	pub := make([]byte, 65)
+	pub := asn1.BitString{Bytes: make([]byte, 65)}
 	info := pkcs.SubjectPublicKeyInfo{pkix.AlgorithmIdentifier{asn1.ObjectIdentifier{1, 2, 156, 10197, 1, 301, 1}, asn1.NullRawValue}, pub}
 	//设置版本
 	realVersion, _ := asn1.Marshal(2)
@@ -43,7 +43,10 @@ func Test_create_cert(t *testing.T) {
 		IsCompound: true,
 	}
 	signAlg := pkix.AlgorithmIdentifier{Algorithm: asn1.ObjectIdentifier{1, 2, 156, 10197, 1, 501}}
-	tbs := pkcs.TBSCertificate{Version: version, SerialNumber: big.NewInt(123456), Signature: signAlg, Issuer: IssuerName, Validity: validity, Subject: SubjectName, SubjectPublicKeyInfo: info}
+	id := asn1.ObjectIdentifier{2, 5, 29, 19}
+	extension := pkix.Extension{Id: id, Value: []byte("test cert")}
+	extensions := []pkix.Extension{extension}
+	tbs := pkcs.TBSCertificate{Version: version, SerialNumber: big.NewInt(123456), Signature: signAlg, Issuer: IssuerName, Validity: validity, Subject: SubjectName, SubjectPublicKeyInfo: info, Extensions: extensions}
 
 	//SM2Signature转为sequence
 	signature := pkcs.SM2Signature{R: big.NewInt(1234567890), S: big.NewInt(987654321)}
