@@ -2,10 +2,11 @@ package example
 
 import (
 	"crypto-engine/pkcs"
+	rand2 "crypto/rand"
+	"crypto/x509"
 	"crypto/x509/pkix"
 	"encoding/asn1"
 	"encoding/base64"
-	"encoding/hex"
 	"fmt"
 	"math/big"
 	"testing"
@@ -14,13 +15,16 @@ import (
 
 func Test_code_cert(t *testing.T) {
 	var cert = "MIIB8zCCAZmgAwIBAgIKAKjKSNY55JbBcTAKBggqhkjOPQQDAjBCMSowKAYDVQQDDCFNaWRlYSBHcm91cCBNYXR0ZXIgUEFJIEcxIEkxIFByb2QxFDASBgorBgEEAYKifAIBEwQxMThDMCAXDTIzMTAyNDE1NTM0MVoYDzIwODcwODI0MTU1OTU5WjBXMSkwJwYDVQQDDCBEOUIyQUFFODcxQjUzRUU2NTYzMjQyOTYxNDUxRUJGRjEUMBIGCisGAQQBgqJ8AgETBDExOEMxFDASBgorBgEEAYKifAICEwQyMDIyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzFklDsljVKzMwNtBMBHLsx+psYLFYPMiGKKOTq2ur0S1SpcPQTmg0kUnu9X6RfJSnW7qBUJQDsPYXTwRifkv+qNgMF4wDAYDVR0TAQH/BAIwADAOBgNVHQ8BAf8EBAMCB4AwHQYDVR0OBBYEFFLhCG3CvDaY1Mu1QtyX2W783wfvMB8GA1UdIwQYMBaAFFm1h6KGoZDqlB20oJiuFdaAAxF4MAoGCCqGSM49BAMCA0gAMEUCIHdFM1UodAqZ73jmDrt786QEn3+jZ0lA7KZy7RzpBJiDAiEA7PRZ0D3NJfq7kKchqww8fDkWGIPwSZ6t5ADlwyuWC5g="
+	cert = "MIIBPDCB4qADAgECAgMB4kAwCgYIKoEcz1UBg3UwITELMAkGA1UEBhMCQ04xEjAQBgNVBAMTCVRlc3QgUm9vdDAeFw0yNDAyMTcxMDUwNDdaFw0yNjAyMTcxMDUwNDdaMBwxCzAJBgNVBAYTAkNOMQ0wCwYDVQQDEwRhZHNmMFMwDQYJKoEcz1UBgi0BBQADQgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKMUMBIwEAYDVR0TBAl0ZXN0IGNlcnQwCwYJKoEcz1UBgi0BBEgwRgIhAPVjH01NRzed8rBnMy1OODsTrvidOWCBOlY2ckSaCxi"
 	decodeBytes, err := base64.StdEncoding.DecodeString(cert)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	certResult, err := asn1.Unmarshal(decodeBytes, &pkcs.Certificate{})
-	fmt.Println(certResult)
+	certificates, err := x509.ParseCertificates(decodeBytes)
+	//var certObj x509.Certificate
+	//certificates, err := asn1.Unmarshal(decodeBytes, &certObj)
+	fmt.Println(certificates)
 	fmt.Println(err)
 
 }
@@ -49,12 +53,15 @@ func Test_create_cert(t *testing.T) {
 	tbs := pkcs.TBSCertificate{Version: version, SerialNumber: big.NewInt(123456), Signature: signAlg, Issuer: IssuerName, Validity: validity, Subject: SubjectName, SubjectPublicKeyInfo: info, Extensions: extensions}
 
 	//SM2Signature转为sequence
-	signature := pkcs.SM2Signature{R: big.NewInt(1234567890), S: big.NewInt(987654321)}
+	randomData := make([]byte, 256/8)
+	rand2.Read(randomData)
+	bigInt := new(big.Int).SetBytes(randomData)
+	signature := pkcs.SM2Signature{R: bigInt, S: bigInt}
 	signatureData, _ := asn1.Marshal(signature)
 
-	certificate := pkcs.Certificate{tbs, alg, signatureData}
+	certificate := pkcs.Certificate{tbs, alg, asn1.BitString{Bytes: signatureData}}
 	fmt.Println(certificate)
-	hexCert, err := asn1.Marshal(certificate)
+	certBytes, err := asn1.Marshal(certificate)
 	fmt.Println(err)
-	fmt.Println(hex.EncodeToString(hexCert))
+	fmt.Println(base64.StdEncoding.EncodeToString(certBytes))
 }
