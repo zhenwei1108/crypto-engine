@@ -12,7 +12,7 @@ import (
 type Certificate struct {
 	TbsCertificate     TBSCertificate
 	SignatureAlgorithm pkix.AlgorithmIdentifier
-	SignatureValue     []byte `struct:"SM2Signature/[]byte" desc:"签名值"`
+	SignatureValue     asn1.BitString `struct:"SM2Signature/[]byte" desc:"签名值"`
 }
 
 type TBSCertificate struct {
