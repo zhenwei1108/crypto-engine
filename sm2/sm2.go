@@ -1,4 +1,4 @@
-package pkcs
+package sm2
 
 import (
 	"crypto/elliptic"
@@ -15,10 +15,10 @@ type SM2Signature struct {
 
 // SM2密文结构 C1 C3 C2
 type SM2Cipher struct {
-	X          *big.Int "x分量"
-	Y          *big.Int "y分量"
-	Hash       []byte   "size 32"
-	CipherText []byte   "密文"
+	X          *big.Int //x分量
+	Y          *big.Int //y分量
+	Hash       []byte   //默认长度 32 字节
+	CipherText []byte   //密文 长度同明文一致
 }
 
 type SM2PublicKey struct {

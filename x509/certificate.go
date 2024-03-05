@@ -1,4 +1,4 @@
-package pkcs
+package x509
 
 import (
 	"crypto/x509/pkix"
