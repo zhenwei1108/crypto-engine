@@ -16,7 +16,7 @@ type Attribute struct {
 	AttributeValue asn1.RawValue
 }
 
-// 主题标识符
+// pkcs8 的公钥
 type SubjectPublicKeyInfo struct {
 	Algorithm        pkix.AlgorithmIdentifier
 	SubjectPublicKey asn1.BitString
