@@ -24,9 +24,9 @@ func Test_code_cert(t *testing.T) {
 	}
 	//原生解析证书工具
 	//certificates, err := x509.ParseCertificates(decodeBytes)
-	var certObj x509.Certificate
+	var certObj engineX509.Certificate
 	_, err = asn1.Unmarshal(decodeBytes, &certObj)
-	fmt.Println(certObj)
+	fmt.Println(certObj.SignatureAlgorithm)
 	fmt.Println(err)
 
 }
