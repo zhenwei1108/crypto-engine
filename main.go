@@ -15,17 +15,26 @@ func main() {
 
 	// 创建一个标签组件
 	helloLabel := widget.NewLabel("Welcome !")
-	form := widget.NewForm()
+
+	input := widget.NewEntry()
+	input.Wrapping = fyne.TextWrapBreak
+	input.SetPlaceHolder("输入证书Base64")
+	//新标签
+	label := widget.NewLabel("")
+	input.OnSubmitted = func(data string) {
+		label.SetText(data)
+		//input.SetText(data)
+	}
 
 	// 创建一个按钮组件
-	closeButton := widget.NewButton("Close", func() {
+	closeButton := widget.NewButton("close", func() {
 		myApp.Quit()
 	})
 	myWindow.Resize(fyne.NewSize(600, 600))
 	// 创建一个容器并添加组件
 	content := container.NewVBox(
 		helloLabel,
-		form,
+		input,
 		closeButton,
 	)
 

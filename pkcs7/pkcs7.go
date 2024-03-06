@@ -1,7 +1,7 @@
 package pkcs7
 
 import (
-	x5092 "crypto-engine/x509"
+	engineX509 "crypto-engine/src/x509"
 	"crypto/x509"
 	"crypto/x509/pkix"
 	"encoding/asn1"
@@ -57,13 +57,13 @@ type signedData struct {
 }
 
 type SignerInfo struct {
-	version                   int                         "版本"
-	issuerAndSerialNumber     x5092.IssuerAndSerialNumber "颁发者信息"
-	digestAlgorithm           pkix.AlgorithmIdentifier    "摘要算法"
-	attributes                []x5092.Attribute           "optional,tag:0, 签名者属性"
-	digestEncryptionAlgorithm pkix.AlgorithmIdentifier    "签名算法"
-	encryptDigest             asn1.RawValue               "签名值,SM2时是 SM2Signature"
-	unauthenticatedAttributes []x5092.Attribute           "optional,tag:1"
+	version                   int                              "版本"
+	issuerAndSerialNumber     engineX509.IssuerAndSerialNumber "颁发者信息"
+	digestAlgorithm           pkix.AlgorithmIdentifier         "摘要算法"
+	attributes                []engineX509.Attribute           "optional,tag:0, 签名者属性"
+	digestEncryptionAlgorithm pkix.AlgorithmIdentifier         "签名算法"
+	encryptDigest             asn1.RawValue                    "签名值,SM2时是 SM2Signature"
+	unauthenticatedAttributes []engineX509.Attribute           "optional,tag:1"
 }
 
 func BuildPkcs7Data(resource []byte, isGM bool) (*ContentInfo, error) {

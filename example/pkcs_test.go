@@ -1,7 +1,7 @@
 package example
 
 import (
-	"crypto-engine/pkcs7"
+	"crypto-engine/src/pkcs7"
 	"encoding/asn1"
 	"encoding/hex"
 	"fmt"

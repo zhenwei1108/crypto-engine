@@ -1,9 +1,9 @@
 package example
 
 import (
-	"crypto-engine/sm2"
-	x5092 "crypto-engine/x509"
-	rand2 "crypto/rand"
+	"crypto-engine/src/sm2"
+	engineX509 "crypto-engine/src/x509"
+	"crypto/rand"
 	"crypto/x509"
 	"crypto/x509/pkix"
 	"encoding/asn1"
@@ -37,12 +37,12 @@ func Test_create_cert(t *testing.T) {
 	SubjectName := pkix.Name{Country: []string{"CN"}, CommonName: "adsf"}.ToRDNSequence()
 	IssuerName := pkix.Name{Country: []string{"CN"}, CommonName: "Test Root"}.ToRDNSequence()
 	notBefore := time.Now()
-	validity := x5092.Validity{notBefore, notBefore.AddDate(2, 0, 0)}
+	validity := engineX509.Validity{notBefore, notBefore.AddDate(2, 0, 0)}
 	//pkcs 8 的公钥
 	pubString := "MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAET2aKBJNS1+09pI28CkeEGvBLQXER9+BFMEEvr8BJ4HgrGrM/ha9wU1V3SpIGJv/3WeslARuwCCEZOooRDNfOLg=="
 	pubBytes, _ := base64.StdEncoding.DecodeString(pubString)
 	//pub := asn1.BitString{Bytes: pubBytes}
-	info := x5092.SubjectPublicKeyInfo{}
+	info := engineX509.SubjectPublicKeyInfo{}
 	_, err2 := asn1.Unmarshal(pubBytes, &info)
 	if err2 != nil {
 		fmt.Println(err2)
@@ -61,7 +61,7 @@ func Test_create_cert(t *testing.T) {
 	id := asn1.ObjectIdentifier{2, 5, 29, 19}
 	extension := pkix.Extension{Id: id, Value: []byte("test cert")}
 	extensions := []pkix.Extension{extension}
-	tbs := x5092.TBSCertificate{Version: version,
+	tbs := engineX509.TBSCertificate{Version: version,
 		SerialNumber:         big.NewInt(123456),
 		Signature:            signAlg,
 		Issuer:               IssuerName,
@@ -72,12 +72,12 @@ func Test_create_cert(t *testing.T) {
 
 	//SM2Signature转为sequence
 	randomData := make([]byte, 256/8)
-	rand2.Read(randomData)
+	rand.Read(randomData)
 	bigInt := new(big.Int).SetBytes(randomData)
 	signature := sm2.SM2Signature{R: bigInt, S: bigInt}
 	signatureData, _ := asn1.Marshal(signature)
 	//todo 这个算法标识必须和上面一致
-	certificate := x5092.Certificate{tbs, signAlg, asn1.BitString{Bytes: signatureData}}
+	certificate := engineX509.Certificate{tbs, signAlg, asn1.BitString{Bytes: signatureData}}
 	fmt.Println(certificate)
 	certBytes, err := asn1.Marshal(certificate)
 	fmt.Println(err)
