@@ -6,46 +6,60 @@ import (
 	"encoding/base64"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	_ "github.com/lengzhao/font/autoload" //这个可以让你识别中文
+	"image/color"
+	"time"
 )
 
 func main() {
 	myApp := app.New()
-
 	// 创建一个窗口对象
-	myWindow := myApp.NewWindow("cert reader")
+	myWindow := myApp.NewWindow("Cert Reader")
+	myWindow.Resize(fyne.NewSize(600, 600))
+	//显示时间，每秒更新
+	showTime := freshTimeSeconds()
+	// 表头
+	helloLabel := widget.NewLabel("欢迎访问全球最大的同性交友网站： https://github.com/zhenwei1108 ")
 
-	// 创建一个标签组件
-	helloLabel := widget.NewLabel("Welcome !")
-
+	//输入
 	input := widget.NewEntry()
 	input.Wrapping = fyne.TextWrapBreak
-	input.SetPlaceHolder("please input certificate text, use base64")
+	input.SetPlaceHolder("输入Base64的X.509证书")
+	//定义一个切片，用于构造表格，key-value
+	resultTable := []fyne.CanvasObject{}
+	//签名算法标识符
+	signAlgKey := canvas.NewText("签名算法：", color.Black)
+	signAlgTextValue := canvas.NewText("", color.Black)
 
-	out := widget.NewEntry()
-
-	parseButton := widget.NewButton("parse", func() {
+	resultTable = append(resultTable, signAlgKey, signAlgTextValue)
+	parseButton := widget.NewButton("解析证书", func() {
 		certBytes, _ := base64.StdEncoding.DecodeString(input.Text)
 		var certificates x509.Certificate
 		_, err := asn1.Unmarshal(certBytes, &certificates)
 		if err != nil {
-			out.SetPlaceHolder(err.Error())
+			signAlgTextValue.Text = err.Error()
 		}
-		out.SetPlaceHolder(certificates.SignatureAlgorithm.Algorithm.String())
-
+		signAlgTextValue.Text = certificates.SignatureAlgorithm.Algorithm.String()
+		//非必填项可以跳过
 	})
-
 	// 创建一个按钮组件
-	closeButton := widget.NewButton("close", func() {
+	closeButton := widget.NewButton("关闭", func() {
 		myApp.Quit()
 	})
-	myWindow.Resize(fyne.NewSize(600, 600))
+
+	//第一个参数，每行几个？
+	grid := container.New(layout.NewGridLayout(2), resultTable...)
+
 	// 创建一个容器并添加组件
 	content := container.NewVBox(
+		showTime,
 		helloLabel,
 		input,
-		out,
+		grid,
 		parseButton,
 		closeButton,
 	)
@@ -55,4 +69,16 @@ func main() {
 
 	// 显示窗口
 	myWindow.ShowAndRun()
+}
+
+func freshTimeSeconds() *widget.Label {
+	//填充当前时间
+	nowTime := widget.NewLabel(time.Now().Format(time.DateTime))
+	//异步线程更新时间
+	go func() {
+		for range time.Tick(time.Second) {
+			nowTime.SetText(time.Now().Format(time.DateTime))
+		}
+	}()
+	return nowTime
 }
