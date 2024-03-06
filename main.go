@@ -1,6 +1,9 @@
 package main
 
 import (
+	"crypto-engine/src/x509"
+	"encoding/asn1"
+	"encoding/base64"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
@@ -11,20 +14,27 @@ func main() {
 	myApp := app.New()
 
 	// 创建一个窗口对象
-	myWindow := myApp.NewWindow("crypto engine")
+	myWindow := myApp.NewWindow("cert reader")
 
 	// 创建一个标签组件
 	helloLabel := widget.NewLabel("Welcome !")
 
 	input := widget.NewEntry()
 	input.Wrapping = fyne.TextWrapBreak
-	input.SetPlaceHolder("输入证书Base64")
-	//新标签
-	label := widget.NewLabel("")
-	input.OnSubmitted = func(data string) {
-		label.SetText(data)
-		//input.SetText(data)
-	}
+	input.SetPlaceHolder("please input certificate text, use base64")
+
+	out := widget.NewEntry()
+
+	parseButton := widget.NewButton("parse", func() {
+		certBytes, _ := base64.StdEncoding.DecodeString(input.Text)
+		var certificates x509.Certificate
+		_, err := asn1.Unmarshal(certBytes, &certificates)
+		if err != nil {
+			out.SetPlaceHolder(err.Error())
+		}
+		out.SetPlaceHolder(certificates.SignatureAlgorithm.Algorithm.String())
+
+	})
 
 	// 创建一个按钮组件
 	closeButton := widget.NewButton("close", func() {
@@ -35,6 +45,8 @@ func main() {
 	content := container.NewVBox(
 		helloLabel,
 		input,
+		out,
+		parseButton,
 		closeButton,
 	)
 
