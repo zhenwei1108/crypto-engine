@@ -30,7 +30,8 @@ func main() {
 
 	//输入
 	input := widget.NewEntry()
-	input.Wrapping = fyne.TextWrapBreak
+
+	//input.Wrapping = fyne.text
 	input.SetPlaceHolder("输入Base64的X.509证书")
 	//定义一个切片，用于构造表格，key-value
 	resultTable := []fyne.CanvasObject{}
@@ -38,7 +39,9 @@ func main() {
 	signAlgKey := canvas.NewText("签名算法：", color.Black)
 	signAlgTextValue := canvas.NewText("", color.Black)
 
-	resultTable = append(resultTable, signAlgKey, signAlgTextValue)
+	issueKey := canvas.NewText("颁发者：", color.Black)
+	issueTextValue := canvas.NewText("", color.Black)
+	resultTable = append(resultTable, signAlgKey, signAlgTextValue, issueKey, issueTextValue)
 	parseButton := widget.NewButton("解析证书", func() {
 		certBytes, _ := base64.StdEncoding.DecodeString(input.Text)
 		var certificates x509.Certificate
@@ -46,8 +49,8 @@ func main() {
 		if err != nil {
 			signAlgTextValue.Text = err.Error()
 		}
-		signAlgTextValue.Text = certificates.SignatureAlgorithm.Algorithm.String()
-		//非必填项可以跳过
+		signAlgTextValue.Text = matchSignAlgFromOid(certificates.SignatureAlgorithm.Algorithm.String()) //非必填项可以跳过
+		issueTextValue.Text = certificates.TbsCertificate.Issuer.String()
 	})
 	// 创建一个按钮组件
 	closeButton := widget.NewButton("关闭", func() {
@@ -84,4 +87,19 @@ func freshTimeSeconds() *widget.Label {
 		}
 	}()
 	return nowTime
+}
+
+func matchSignAlgFromOid(signAlgOid string) string {
+
+	switch signAlgOid {
+	case x509.SM3WithSM2:
+		return "SM3WithSM2"
+	case x509.SHA256WithRSA:
+		return "SHA256WithRSA"
+	case x509.SHA1WithRSA:
+		return "SHA1WithRSA"
+	default:
+		return signAlgOid
+	}
+
 }
