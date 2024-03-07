@@ -15,6 +15,9 @@ import (
 	"time"
 )
 
+// go的发布时间，作为日期的格式
+const DateTime = "2006-01-02 15:04:05"
+
 func main() {
 	myApp := app.New()
 	// 创建一个窗口对象
@@ -73,11 +76,11 @@ func main() {
 
 func freshTimeSeconds() *widget.Label {
 	//填充当前时间
-	nowTime := widget.NewLabel(time.Now().Format(time.DateTime))
+	nowTime := widget.NewLabel(time.Now().Format(DateTime))
 	//异步线程更新时间
 	go func() {
 		for range time.Tick(time.Second) {
-			nowTime.SetText(time.Now().Format(time.DateTime))
+			nowTime.SetText(time.Now().Format(DateTime))
 		}
 	}()
 	return nowTime
