@@ -12,6 +12,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 	_ "github.com/lengzhao/font/autoload" //这个可以让你识别中文
 	"image/color"
+	"strings"
 	"time"
 )
 
@@ -29,28 +30,43 @@ func main() {
 	helloLabel := widget.NewLabel("欢迎访问全球最大的同性交友网站： https://github.com/zhenwei1108 ")
 
 	//输入
-	input := widget.NewEntry()
+	base64Input := widget.NewEntry()
 
 	//input.Wrapping = fyne.text
-	input.SetPlaceHolder("输入Base64的X.509证书")
+	base64Input.SetPlaceHolder("输入Base64的X.509证书")
+
+	hexInput := widget.NewEntry()
+	hexInput.SetPlaceHolder("输入Base64的X.509证书")
+
 	//定义一个切片，用于构造表格，key-value
 	resultTable := []fyne.CanvasObject{}
 	//签名算法标识符
-	signAlgKey := canvas.NewText("签名算法：", color.Black)
-	signAlgTextValue := canvas.NewText("", color.Black)
+	signAlgText := canvas.NewText("", color.Black)
+	//颁发者
+	issueText := canvas.NewText("", color.Black)
+	//有效期
+	validityText := canvas.NewText("", color.Black)
 
-	issueKey := canvas.NewText("颁发者：", color.Black)
-	issueTextValue := canvas.NewText("", color.Black)
-	resultTable = append(resultTable, signAlgKey, signAlgTextValue, issueKey, issueTextValue)
+	serNoText := canvas.NewText("", color.Black)
+
+	resultTable = append(resultTable, signAlgText, issueText, serNoText, validityText)
 	parseButton := widget.NewButton("解析证书", func() {
-		certBytes, _ := base64.StdEncoding.DecodeString(input.Text)
-		var certificates x509.Certificate
-		_, err := asn1.Unmarshal(certBytes, &certificates)
-		if err != nil {
-			signAlgTextValue.Text = err.Error()
+		base64InputString := strings.ReplaceAll(base64Input.Text, " ", "")
+		hexInputString := strings.ReplaceAll(hexInput.Text, " ", "")
+		if StringIsEmpty(hexInputString) {
+			//todo
 		}
-		signAlgTextValue.Text = matchSignAlgFromOid(certificates.SignatureAlgorithm.Algorithm.String()) //非必填项可以跳过
-		issueTextValue.Text = certificates.TbsCertificate.Issuer.String()
+		certBytes, _ := base64.StdEncoding.DecodeString(base64InputString)
+
+		var certificate x509.Certificate
+		_, err := asn1.Unmarshal(certBytes, &certificate)
+		if err != nil {
+			signAlgText.Text = err.Error()
+		}
+		signAlgText.Text = "签名算法: " + matchSignAlgFromOid(certificate.SignatureAlgorithm.Algorithm.String()) //非必填项可以跳过
+		issueText.Text = "颁发者: " + certificate.TbsCertificate.Issuer.String()
+		validityText.Text = "有效期: " + certificate.TbsCertificate.Validity.NotAfter.String()
+		serNoText.Text = "证书序列号: " + strings.ToUpper(certificate.TbsCertificate.SerialNumber.Text(16))
 	})
 	// 创建一个按钮组件
 	closeButton := widget.NewButton("关闭", func() {
@@ -58,16 +74,16 @@ func main() {
 	})
 
 	//第一个参数，每行几个？
-	grid := container.New(layout.NewGridLayout(2), resultTable...)
+	grid := container.New(layout.NewGridLayout(1), resultTable...)
 
 	// 创建一个容器并添加组件
 	content := container.NewVBox(
 		showTime,
 		helloLabel,
-		input,
-		grid,
+		base64Input,
 		parseButton,
 		closeButton,
+		grid,
 	)
 
 	// 将容器添加到窗口
@@ -101,5 +117,12 @@ func matchSignAlgFromOid(signAlgOid string) string {
 	default:
 		return signAlgOid
 	}
+}
+
+func StringIsEmpty(data string) bool {
+	if data == "" || len(data) == 0 {
+		return true
+	}
+	return false
 
 }
