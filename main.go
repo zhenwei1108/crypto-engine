@@ -4,6 +4,7 @@ import (
 	"crypto-engine/src/x509"
 	"encoding/asn1"
 	"encoding/base64"
+	"encoding/hex"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
@@ -35,10 +36,12 @@ func main() {
 	base64Input := widget.NewEntry()
 
 	//input.Wrapping = fyne.text
-	base64Input.SetPlaceHolder("输入Base64的X.509证书")
+	//输入Base64的X.509证书
+	base64Input.SetPlaceHolder("MIICETCCAbWgAwIBAgINKl81oFaaablKOp0YTjAMBggqgRzPVQGDdQUAMGExCzAJBgNVBAYMAkNOMQ0wCwYDVQQKDARCSkNBMSUwIwYDVQQLDBxCSkNBIEFueXdyaXRlIFRydXN0IFNlcnZpY2VzMRwwGgYDVQQDDBNUcnVzdC1TaWduIFNNMiBDQS0xMB4XDTIwMDgxMzIwMTkzNFoXDTIwMTAyNDE1NTk1OVowHjELMAkGA1UEBgwCQ04xDzANBgNVBAMMBuWGr+i9rDBZMBMGByqGSM49AgEGCCqBHM9VAYItA0IABAIF97Sqq0Rv616L2PjFP3xt16QGJLmi+W8Ht+NLHiXntgUey0Nz+ZVnSUKUMzkKuGTikY3h2v7la20b6lpKo8WjgZIwgY8wCwYDVR0PBAQDAgbAMB0GA1UdDgQWBBSxiaS6z4Uguz3MepS2zblkuAF/LTAfBgNVHSMEGDAWgBTMZyRCGsP4rSes0vLlhIEf6cUvrjBABgNVHSAEOTA3MDUGCSqBHIbvMgICAjAoMCYGCCsGAQUFBwIBFhpodHRwOi8vd3d3LmJqY2Eub3JnLmNuL2NwczAMBggqgRzPVQGDdQUAA0gAMEUCIG6n6PG0BOK1EdFcvetQlC+9QhpsTuTui2wkeqWiPKYWAiEAvqR8Z+tSiYR5DIs7SyHJPWZ+sa8brtQL/1jURvHGxU8=")
+	base64Input.Text = "MIICETCCAbWgAwIBAgINKl81oFaaablKOp0YTjAMBggqgRzPVQGDdQUAMGExCzAJBgNVBAYMAkNOMQ0wCwYDVQQKDARCSkNBMSUwIwYDVQQLDBxCSkNBIEFueXdyaXRlIFRydXN0IFNlcnZpY2VzMRwwGgYDVQQDDBNUcnVzdC1TaWduIFNNMiBDQS0xMB4XDTIwMDgxMzIwMTkzNFoXDTIwMTAyNDE1NTk1OVowHjELMAkGA1UEBgwCQ04xDzANBgNVBAMMBuWGr+i9rDBZMBMGByqGSM49AgEGCCqBHM9VAYItA0IABAIF97Sqq0Rv616L2PjFP3xt16QGJLmi+W8Ht+NLHiXntgUey0Nz+ZVnSUKUMzkKuGTikY3h2v7la20b6lpKo8WjgZIwgY8wCwYDVR0PBAQDAgbAMB0GA1UdDgQWBBSxiaS6z4Uguz3MepS2zblkuAF/LTAfBgNVHSMEGDAWgBTMZyRCGsP4rSes0vLlhIEf6cUvrjBABgNVHSAEOTA3MDUGCSqBHIbvMgICAjAoMCYGCCsGAQUFBwIBFhpodHRwOi8vd3d3LmJqY2Eub3JnLmNuL2NwczAMBggqgRzPVQGDdQUAA0gAMEUCIG6n6PG0BOK1EdFcvetQlC+9QhpsTuTui2wkeqWiPKYWAiEAvqR8Z+tSiYR5DIs7SyHJPWZ+sa8brtQL/1jURvHGxU8="
 
 	hexInput := widget.NewEntry()
-	hexInput.SetPlaceHolder("输入Base64的X.509证书")
+	hexInput.SetPlaceHolder("输入Hex的X.509证书")
 
 	//定义一个切片，用于构造表格，key-value
 	resultTable := []fyne.CanvasObject{}
@@ -52,17 +55,22 @@ func main() {
 	serNoText := canvas.NewText("", color.Black)
 
 	resultTable = append(resultTable, signAlgText, issueText, serNoText, validityText)
-
+	var grid *fyne.Container
 	//第一个参数，每行几个？
-	grid := container.New(layout.NewGridLayout(1), resultTable...)
+	grid = container.New(layout.NewGridLayout(1), resultTable...)
 	grid.Hide()
 	parseButton := widget.NewButton("解析证书", func() {
 		base64InputString := strings.ReplaceAll(base64Input.Text, " ", "")
 		hexInputString := strings.ReplaceAll(hexInput.Text, " ", "")
-		if StringIsEmpty(hexInputString) {
-			//todo
+		var certBytes []byte
+		if StringIsEmpty(base64InputString) {
+			certBytes, _ = hex.DecodeString(hexInputString)
+			base64Input.Text = base64.StdEncoding.EncodeToString(certBytes)
 		}
-		certBytes, _ := base64.StdEncoding.DecodeString(base64InputString)
+		if StringIsEmpty(hexInputString) {
+			certBytes, _ = base64.StdEncoding.DecodeString(base64InputString)
+			hexInput.SetText(hex.EncodeToString(certBytes))
+		}
 
 		var certificate x509.Certificate
 		_, err := asn1.Unmarshal(certBytes, &certificate)
@@ -73,6 +81,7 @@ func main() {
 		issueText.Text = "颁发者: " + certificate.TbsCertificate.Issuer.String()
 		validityText.Text = "有效期: " + certificate.TbsCertificate.Validity.NotAfter.String()
 		serNoText.Text = "证书序列号: " + strings.ToUpper(certificate.TbsCertificate.SerialNumber.Text(16))
+
 		//防止变形
 		grid.Resize(fyne.NewSize(100, 100))
 		grid.Show()
@@ -89,6 +98,7 @@ func main() {
 		showTime,
 		helloLabel,
 		base64Input,
+		hexInput,
 		parseButton,
 		grid,
 		closeButton,
