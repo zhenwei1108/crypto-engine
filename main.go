@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto-engine/src/util"
 	"crypto-engine/src/x509"
 	"encoding/asn1"
 	"encoding/base64"
@@ -31,7 +32,7 @@ func main() {
 	showTime := freshTimeSeconds()
 	// 表头
 	helloLabel := widget.NewLabel("欢迎访问全球最大的同性交友网站： https://github.com/zhenwei1108 ")
-
+	var content *fyne.Container
 	//输入
 	base64Input := widget.NewEntry()
 
@@ -59,19 +60,18 @@ func main() {
 	//第一个参数，每行几个？
 	grid = container.New(layout.NewGridLayout(1), resultTable...)
 	grid.Hide()
-	parseButton := widget.NewButton("解析证书", func() {
-		base64InputString := strings.ReplaceAll(base64Input.Text, " ", "")
-		hexInputString := strings.ReplaceAll(hexInput.Text, " ", "")
-		var certBytes []byte
-		if StringIsEmpty(base64InputString) {
-			certBytes, _ = hex.DecodeString(hexInputString)
-			base64Input.Text = base64.StdEncoding.EncodeToString(certBytes)
+	var certBytes []byte
+	encodeButton := widget.NewButton("Hex/Base转换", func() {
+		certBytes = getInput(base64Input, hexInput)
+	})
+	parseCertButton := widget.NewButton("解析证书", func() {
+		//输入为空，则什么都不处理
+		if util.BytesIsEmpty(certBytes) {
+			certBytes = getInput(base64Input, hexInput)
+			if util.BytesIsEmpty(certBytes) {
+				return
+			}
 		}
-		if StringIsEmpty(hexInputString) {
-			certBytes, _ = base64.StdEncoding.DecodeString(base64InputString)
-			hexInput.SetText(hex.EncodeToString(certBytes))
-		}
-
 		var certificate x509.Certificate
 		_, err := asn1.Unmarshal(certBytes, &certificate)
 		if err != nil {
@@ -81,9 +81,8 @@ func main() {
 		issueText.Text = "颁发者: " + certificate.TbsCertificate.Issuer.String()
 		validityText.Text = "有效期: " + certificate.TbsCertificate.Validity.NotAfter.String()
 		serNoText.Text = "证书序列号: " + strings.ToUpper(certificate.TbsCertificate.SerialNumber.Text(16))
-
 		//防止变形
-		grid.Resize(fyne.NewSize(100, 100))
+		//grid.Resize(fyne.NewSize(100, 100))
 		grid.Show()
 	})
 	// 创建一个按钮组件
@@ -91,17 +90,18 @@ func main() {
 		myApp.Quit()
 	})
 
+	allButton := container.New(layout.NewGridLayout(2), encodeButton, parseCertButton)
 	//grid.Hide()
 
 	// 创建一个容器并添加组件
-	content := container.NewVBox(
+	content = container.NewVBox(
 		showTime,
 		helloLabel,
 		base64Input,
 		hexInput,
-		parseButton,
-		grid,
+		allButton,
 		closeButton,
+		grid,
 	)
 
 	// 将容器添加到窗口
@@ -137,10 +137,16 @@ func matchSignAlgFromOid(signAlgOid string) string {
 	}
 }
 
-func StringIsEmpty(data string) bool {
-	if data == "" || len(data) == 0 {
-		return true
+func getInput(base64Input *widget.Entry, hexInput *widget.Entry) (certBytes []byte) {
+	base64InputString := strings.ReplaceAll(base64Input.Text, " ", "")
+	hexInputString := strings.ReplaceAll(hexInput.Text, " ", "")
+	if util.StringIsEmpty(base64InputString) {
+		certBytes, _ = hex.DecodeString(hexInputString)
+		base64Input.Text = base64.StdEncoding.EncodeToString(certBytes)
 	}
-	return false
-
+	if util.StringIsEmpty(hexInputString) {
+		certBytes, _ = base64.StdEncoding.DecodeString(base64InputString)
+		hexInput.SetText(hex.EncodeToString(certBytes))
+	}
+	return certBytes
 }
