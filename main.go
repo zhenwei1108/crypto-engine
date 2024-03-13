@@ -27,6 +27,7 @@ func main() {
 	myApp := app.New()
 	// 创建一个窗口对象
 	myWindow := myApp.NewWindow("Cert Reader")
+
 	myWindow.Resize(fyne.NewSize(600, 600))
 	//显示时间，每秒更新
 	showTime := freshTimeSeconds()
@@ -34,14 +35,14 @@ func main() {
 	helloLabel := widget.NewLabel("欢迎访问全球最大的同性交友网站： https://github.com/zhenwei1108 ")
 	var content *fyne.Container
 	//输入
-	base64Input := widget.NewEntry()
+	base64Input := &widget.Entry{MultiLine: true, Wrapping: fyne.TextWrapWord}
 
 	//input.Wrapping = fyne.text
 	//输入Base64的X.509证书
 	base64Input.SetPlaceHolder("MIICETCCAbWgAwIBAgINKl81oFaaablKOp0YTjAMBggqgRzPVQGDdQUAMGExCzAJBgNVBAYMAkNOMQ0wCwYDVQQKDARCSkNBMSUwIwYDVQQLDBxCSkNBIEFueXdyaXRlIFRydXN0IFNlcnZpY2VzMRwwGgYDVQQDDBNUcnVzdC1TaWduIFNNMiBDQS0xMB4XDTIwMDgxMzIwMTkzNFoXDTIwMTAyNDE1NTk1OVowHjELMAkGA1UEBgwCQ04xDzANBgNVBAMMBuWGr+i9rDBZMBMGByqGSM49AgEGCCqBHM9VAYItA0IABAIF97Sqq0Rv616L2PjFP3xt16QGJLmi+W8Ht+NLHiXntgUey0Nz+ZVnSUKUMzkKuGTikY3h2v7la20b6lpKo8WjgZIwgY8wCwYDVR0PBAQDAgbAMB0GA1UdDgQWBBSxiaS6z4Uguz3MepS2zblkuAF/LTAfBgNVHSMEGDAWgBTMZyRCGsP4rSes0vLlhIEf6cUvrjBABgNVHSAEOTA3MDUGCSqBHIbvMgICAjAoMCYGCCsGAQUFBwIBFhpodHRwOi8vd3d3LmJqY2Eub3JnLmNuL2NwczAMBggqgRzPVQGDdQUAA0gAMEUCIG6n6PG0BOK1EdFcvetQlC+9QhpsTuTui2wkeqWiPKYWAiEAvqR8Z+tSiYR5DIs7SyHJPWZ+sa8brtQL/1jURvHGxU8=")
 	base64Input.Text = "MIICETCCAbWgAwIBAgINKl81oFaaablKOp0YTjAMBggqgRzPVQGDdQUAMGExCzAJBgNVBAYMAkNOMQ0wCwYDVQQKDARCSkNBMSUwIwYDVQQLDBxCSkNBIEFueXdyaXRlIFRydXN0IFNlcnZpY2VzMRwwGgYDVQQDDBNUcnVzdC1TaWduIFNNMiBDQS0xMB4XDTIwMDgxMzIwMTkzNFoXDTIwMTAyNDE1NTk1OVowHjELMAkGA1UEBgwCQ04xDzANBgNVBAMMBuWGr+i9rDBZMBMGByqGSM49AgEGCCqBHM9VAYItA0IABAIF97Sqq0Rv616L2PjFP3xt16QGJLmi+W8Ht+NLHiXntgUey0Nz+ZVnSUKUMzkKuGTikY3h2v7la20b6lpKo8WjgZIwgY8wCwYDVR0PBAQDAgbAMB0GA1UdDgQWBBSxiaS6z4Uguz3MepS2zblkuAF/LTAfBgNVHSMEGDAWgBTMZyRCGsP4rSes0vLlhIEf6cUvrjBABgNVHSAEOTA3MDUGCSqBHIbvMgICAjAoMCYGCCsGAQUFBwIBFhpodHRwOi8vd3d3LmJqY2Eub3JnLmNuL2NwczAMBggqgRzPVQGDdQUAA0gAMEUCIG6n6PG0BOK1EdFcvetQlC+9QhpsTuTui2wkeqWiPKYWAiEAvqR8Z+tSiYR5DIs7SyHJPWZ+sa8brtQL/1jURvHGxU8="
 
-	hexInput := widget.NewEntry()
+	hexInput := &widget.Entry{MultiLine: true, Wrapping: fyne.TextWrapWord}
 	hexInput.SetPlaceHolder("输入Hex的X.509证书")
 
 	//定义一个切片，用于构造表格，key-value
@@ -50,16 +51,11 @@ func main() {
 	signAlgText := canvas.NewText("", color.Black)
 	//颁发者
 	issueText := canvas.NewText("", color.Black)
+	issueText.TextStyle = fyne.TextStyle{Italic: true, Bold: true}
 	//有效期
 	validityText := canvas.NewText("", color.Black)
 
 	serNoText := canvas.NewText("", color.Black)
-
-	resultTable = append(resultTable, signAlgText, issueText, serNoText, validityText)
-	var grid *fyne.Container
-	//第一个参数，每行几个？
-	grid = container.New(layout.NewGridLayout(1), resultTable...)
-	grid.Hide()
 	var certBytes []byte
 	encodeButton := widget.NewButton("Hex/Base转换", func() {
 		certBytes = getInput(base64Input, hexInput)
@@ -83,8 +79,12 @@ func main() {
 		serNoText.Text = "证书序列号: " + strings.ToUpper(certificate.TbsCertificate.SerialNumber.Text(16))
 		//防止变形
 		//grid.Resize(fyne.NewSize(100, 100))
-		grid.Show()
+		resultTable = append(resultTable, signAlgText, issueText, serNoText, validityText)
 	})
+
+	var grid *fyne.Container
+	//第一个参数，每行几个？
+	grid = container.New(layout.NewGridLayout(1), resultTable...)
 	// 创建一个按钮组件
 	closeButton := widget.NewButton("关闭", func() {
 		myApp.Quit()
