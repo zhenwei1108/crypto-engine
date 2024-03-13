@@ -57,9 +57,11 @@ func main() {
 	validityText := canvas.NewText("", color.Black)
 
 	serNoText := canvas.NewText("", color.Black)
+	pubKeyAlgText := canvas.NewText("", color.Black)
+	pubKeyText := canvas.NewText("", color.Black)
 
 	//展示信息排序
-	resultTable = append(resultTable, serNoText, signAlgText, issueText, subjectText, validityText)
+	resultTable = append(resultTable, serNoText, signAlgText, issueText, subjectText, validityText, pubKeyAlgText, pubKeyText)
 
 	var certBytes []byte
 	encodeButton := widget.NewButton("Hex/Base转换", func() {
@@ -84,6 +86,10 @@ func main() {
 		serNoText.Text = "证书序列号: " + strings.ToUpper(certificate.TbsCertificate.SerialNumber.Text(16))
 		subjectText.Text = "使用者: " + certificate.TbsCertificate.Subject.String()
 
+		info := certificate.TbsCertificate.SubjectPublicKeyInfo
+		//ecc 1.2.840.10045.2.1
+		pubKeyAlgText.Text = "公钥算法: " + matchPublicKeyAlgFromOid(info.Algorithm.Algorithm.String())
+		pubKeyText.Text = "公钥: " + strings.ToUpper(hex.EncodeToString(info.SubjectPublicKey.Bytes))
 	})
 
 	var grid *fyne.Container
@@ -125,6 +131,16 @@ func freshTimeSeconds() *widget.Label {
 		}
 	}()
 	return nowTime
+}
+
+func matchPublicKeyAlgFromOid(oid string) string {
+	switch oid {
+	case x509.ECC:
+		return "ECC"
+	default:
+		return "SM2"
+	}
+
 }
 
 func matchSignAlgFromOid(signAlgOid string) string {
