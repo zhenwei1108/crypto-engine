@@ -52,10 +52,15 @@ func main() {
 	//颁发者
 	issueText := canvas.NewText("", color.Black)
 	issueText.TextStyle = fyne.TextStyle{Italic: true, Bold: true}
+	subjectText := canvas.NewText("", color.Black)
 	//有效期
 	validityText := canvas.NewText("", color.Black)
 
 	serNoText := canvas.NewText("", color.Black)
+
+	//展示信息排序
+	resultTable = append(resultTable, serNoText, signAlgText, issueText, subjectText, validityText)
+
 	var certBytes []byte
 	encodeButton := widget.NewButton("Hex/Base转换", func() {
 		certBytes = getInput(base64Input, hexInput)
@@ -75,11 +80,10 @@ func main() {
 		}
 		signAlgText.Text = "签名算法: " + matchSignAlgFromOid(certificate.SignatureAlgorithm.Algorithm.String()) //非必填项可以跳过
 		issueText.Text = "颁发者: " + certificate.TbsCertificate.Issuer.String()
-		validityText.Text = "有效期: " + certificate.TbsCertificate.Validity.NotAfter.String()
+		validityText.Text = "有效期: " + certificate.TbsCertificate.Validity.NotBefore.Format(DateTime) + " 至 " + certificate.TbsCertificate.Validity.NotAfter.Format(DateTime)
 		serNoText.Text = "证书序列号: " + strings.ToUpper(certificate.TbsCertificate.SerialNumber.Text(16))
-		//防止变形
-		//grid.Resize(fyne.NewSize(100, 100))
-		resultTable = append(resultTable, signAlgText, issueText, serNoText, validityText)
+		subjectText.Text = "使用者: " + certificate.TbsCertificate.Subject.String()
+
 	})
 
 	var grid *fyne.Container
