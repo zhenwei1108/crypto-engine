@@ -12,6 +12,9 @@ const (
 	SM3WithSM2     = "1.2.156.10197.1.501"
 	SHA256WithWapi = "1.2.156.11235.1.1.1"
 )
+const (
+	ECC = "1.2.840.10045.2.1"
+)
 
 type IssuerAndSerialNumber struct {
 	X500Name         asn1.RawValue "X500Name, 用于描述DN"
