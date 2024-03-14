@@ -11,14 +11,14 @@ import (
 // GMT-0015
 type Certificate struct {
 	TbsCertificate     TBSCertificate
-	SignatureAlgorithm pkix.AlgorithmIdentifier
-	SignatureValue     asn1.BitString `struct:"SM2Signature/[]byte" desc:"签名值"`
+	SignatureAlgorithm pkix.AlgorithmIdentifier //此标识需要同 tbs中算法标识一致
+	SignatureValue     asn1.BitString           `struct:"SM2Signature/[]byte" desc:"签名值"`
 }
 
 type TBSCertificate struct {
 	Version              asn1.RawValue `asn1:"explicit,tag:0,default:0" version:"V1(0) V2(1) V3(2)"`
 	SerialNumber         *big.Int
-	Signature            pkix.AlgorithmIdentifier //签名算法
+	Signature            pkix.AlgorithmIdentifier //签名算法，此标识需要同 Certificate中算法标识一致
 	Issuer               pkix.RDNSequence
 	Validity             Validity
 	Subject              pkix.RDNSequence
