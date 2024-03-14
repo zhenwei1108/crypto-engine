@@ -7,13 +7,15 @@ import (
 )
 
 const (
-	SHA256WithRSA  = "1.2.840.113549.1.1.11"
-	SHA1WithRSA    = "1.2.840.113549.1.1.5"
-	SM3WithSM2     = "1.2.156.10197.1.501"
-	SHA256WithWapi = "1.2.156.11235.1.1.1"
+	SHA256WithRSAOid  = "1.2.840.113549.1.1.11"
+	SHA1WithRSAOid    = "1.2.840.113549.1.1.5"
+	SM3WithSM2Oid     = "1.2.156.10197.1.501"
+	SHA256WithWAPIOid = "1.2.156.11235.1.1.1"
 )
 const (
-	ECC = "1.2.840.10045.2.1"
+	ECCOid = "1.2.840.10045.2.1"
+	SM2Oid = "1.2.156.10197.1.301"
+	RSAOid = "1.2.840.113549.1.1.1"
 )
 
 type IssuerAndSerialNumber struct {

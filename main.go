@@ -65,12 +65,12 @@ func main() {
 
 	var certBytes []byte
 	encodeButton := widget.NewButton("Hex/Base转换", func() {
-		certBytes = getInput(base64Input, hexInput)
+		certBytes = getInputAboutCert(base64Input, hexInput)
 	})
 	parseCertButton := widget.NewButton("解析证书", func() {
 		//输入为空，则什么都不处理
 		if util.BytesIsEmpty(certBytes) {
-			certBytes = getInput(base64Input, hexInput)
+			certBytes = getInputAboutCert(base64Input, hexInput)
 			if util.BytesIsEmpty(certBytes) {
 				return
 			}
@@ -135,29 +135,34 @@ func freshTimeSeconds() *widget.Label {
 
 func matchPublicKeyAlgFromOid(oid string) string {
 	switch oid {
-	case x509.ECC:
+	case x509.ECCOid:
 		return "ECC"
-	default:
+	case x509.SM2Oid:
 		return "SM2"
+	case x509.RSAOid:
+		return "RSA"
+	default:
+		return ""
 	}
-
 }
 
+// 匹配签名算法
 func matchSignAlgFromOid(signAlgOid string) string {
 
 	switch signAlgOid {
-	case x509.SM3WithSM2:
+	case x509.SM3WithSM2Oid:
 		return "SM3WithSM2"
-	case x509.SHA256WithRSA:
+	case x509.SHA256WithRSAOid:
 		return "SHA256WithRSA"
-	case x509.SHA1WithRSA:
+	case x509.SHA1WithRSAOid:
 		return "SHA1WithRSA"
 	default:
 		return signAlgOid
 	}
 }
 
-func getInput(base64Input *widget.Entry, hexInput *widget.Entry) (certBytes []byte) {
+// 获取输入的证书信息
+func getInputAboutCert(base64Input *widget.Entry, hexInput *widget.Entry) (certBytes []byte) {
 	base64InputString := strings.ReplaceAll(base64Input.Text, " ", "")
 	hexInputString := strings.ReplaceAll(hexInput.Text, " ", "")
 	if util.StringIsEmpty(base64InputString) {
