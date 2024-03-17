@@ -45,29 +45,18 @@ func main() {
 	hexInput := &widget.Entry{MultiLine: true, Wrapping: fyne.TextWrapWord}
 	hexInput.SetPlaceHolder("输入Hex的X.509证书")
 
-	//定义一个切片，用于构造表格，key-value
-	resultTable := []fyne.CanvasObject{}
-	//签名算法标识符
-	signAlgText := canvas.NewText("", color.Black)
-	//颁发者
-	issueText := canvas.NewText("", color.Black)
-	issueText.TextStyle = fyne.TextStyle{Italic: true, Bold: true}
-	subjectText := canvas.NewText("", color.Black)
-	//有效期
-	validityText := canvas.NewText("", color.Black)
-
-	serNoText := canvas.NewText("", color.Black)
-	pubKeyAlgText := canvas.NewText("", color.Black)
-	pubKeyText := canvas.NewText("", color.Black)
-
-	//展示信息排序
-	resultTable = append(resultTable, serNoText, signAlgText, issueText, subjectText, validityText, pubKeyAlgText, pubKeyText)
-
 	var certBytes []byte
 	encodeButton := widget.NewButton("Hex/Base转换", func() {
 		certBytes = getInputAboutCert(base64Input, hexInput)
 	})
+
+	var grid *fyne.Container
 	parseCertButton := widget.NewButton("解析证书", func() {
+		//定义一个切片，用于构造表格，key-value
+		resultTable := []fyne.CanvasObject{}
+		//清空上次的数据
+		content.Remove(grid)
+
 		//输入为空，则什么都不处理
 		if util.BytesIsEmpty(certBytes) {
 			certBytes = getInputAboutCert(base64Input, hexInput)
@@ -77,6 +66,21 @@ func main() {
 		}
 		var certificate x509.Certificate
 		_, err := asn1.Unmarshal(certBytes, &certificate)
+
+		//签名算法标识符
+		signAlgText := canvas.NewText("", color.Black)
+		//颁发者
+		issueText := canvas.NewText("", color.Black)
+		issueText.TextStyle = fyne.TextStyle{Italic: true, Bold: true}
+		subjectText := canvas.NewText("", color.Black)
+		//有效期
+		validityText := canvas.NewText("", color.Black)
+
+		serNoText := canvas.NewText("", color.Black)
+		pubKeyAlgText := canvas.NewText("", color.Black)
+		pubKeyText := canvas.NewText("", color.Black)
+		issueIdText := canvas.NewText("", color.Black)
+		subjectIdText := canvas.NewText("", color.Black)
 		if err != nil {
 			signAlgText.Text = err.Error()
 		}
@@ -90,11 +94,26 @@ func main() {
 		//ecc 1.2.840.10045.2.1
 		pubKeyAlgText.Text = "公钥算法: " + matchPublicKeyAlgFromOid(info.Algorithm.Algorithm.String())
 		pubKeyText.Text = "公钥: " + strings.ToUpper(hex.EncodeToString(info.SubjectPublicKey.Bytes))
-	})
+		//optional
+		issuerIdBytes := certificate.TbsCertificate.IssuerUniqueID.Bytes
+		//展示信息排序
+		resultTable = append(resultTable, serNoText, signAlgText, issueText, subjectText, validityText, pubKeyAlgText, pubKeyText, issueIdText, subjectIdText)
+		if issuerIdBytes != nil {
+			issueIdText.Text = "颁发者标识符: " + hex.EncodeToString(issuerIdBytes)
+			resultTable = append(resultTable, issueIdText)
+		}
 
-	var grid *fyne.Container
-	//第一个参数，每行几个？
-	grid = container.New(layout.NewGridLayout(1), resultTable...)
+		subjectIdBytes := certificate.TbsCertificate.SubjectUniqueID.Bytes
+		if subjectIdBytes != nil {
+			subjectIdText.Text = "使用者标识符: " + hex.EncodeToString(subjectIdBytes)
+			resultTable = append(resultTable, subjectIdText)
+		}
+
+		//补充证书解析结果，并刷新
+		grid = container.New(layout.NewGridLayout(1), resultTable...)
+		content.Add(grid)
+		content.Refresh()
+	})
 	// 创建一个按钮组件
 	closeButton := widget.NewButton("关闭", func() {
 		myApp.Quit()
@@ -111,7 +130,6 @@ func main() {
 		hexInput,
 		allButton,
 		closeButton,
-		grid,
 	)
 
 	// 将容器添加到窗口
