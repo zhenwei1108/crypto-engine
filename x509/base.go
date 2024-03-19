@@ -33,3 +33,11 @@ type SubjectPublicKeyInfo struct {
 	Algorithm        pkix.AlgorithmIdentifier
 	SubjectPublicKey asn1.BitString
 }
+
+type Name pkix.RDNSequence
+
+// 0x0c = utf8
+// 0x13 = printable
+func (name Name) ToString() string {
+	return pkix.RDNSequence(name).String()
+}
