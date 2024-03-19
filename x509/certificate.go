@@ -19,9 +19,9 @@ type TBSCertificate struct {
 	Version              asn1.RawValue `asn1:"explicit,tag:0,default:0" version:"V1(0) V2(1) V3(2)"`
 	SerialNumber         *big.Int
 	Signature            pkix.AlgorithmIdentifier //签名算法，此标识需要同 Certificate中算法标识一致
-	Issuer               pkix.RDNSequence
+	Issuer               Name
 	Validity             Validity
-	Subject              pkix.RDNSequence
+	Subject              Name
 	SubjectPublicKeyInfo SubjectPublicKeyInfo //公钥信息
 	IssuerUniqueID       asn1.RawValue        `asn1:"optional,tag:1"` // omitempty 指定此基础字段不被编码，   asn1:"optional“表示asn1不编码
 	SubjectUniqueID      asn1.RawValue        `asn1:"optional,tag:2" desc:"如果出现，版本选择V3"`
