@@ -41,6 +41,7 @@ func main() {
 	//输入Base64的X.509证书
 	base64Input.SetPlaceHolder("MIICETCCAbWgAwIBAgINKl81oFaaablKOp0YTjAMBggqgRzPVQGDdQUAMGExCzAJBgNVBAYMAkNOMQ0wCwYDVQQKDARCSkNBMSUwIwYDVQQLDBxCSkNBIEFueXdyaXRlIFRydXN0IFNlcnZpY2VzMRwwGgYDVQQDDBNUcnVzdC1TaWduIFNNMiBDQS0xMB4XDTIwMDgxMzIwMTkzNFoXDTIwMTAyNDE1NTk1OVowHjELMAkGA1UEBgwCQ04xDzANBgNVBAMMBuWGr+i9rDBZMBMGByqGSM49AgEGCCqBHM9VAYItA0IABAIF97Sqq0Rv616L2PjFP3xt16QGJLmi+W8Ht+NLHiXntgUey0Nz+ZVnSUKUMzkKuGTikY3h2v7la20b6lpKo8WjgZIwgY8wCwYDVR0PBAQDAgbAMB0GA1UdDgQWBBSxiaS6z4Uguz3MepS2zblkuAF/LTAfBgNVHSMEGDAWgBTMZyRCGsP4rSes0vLlhIEf6cUvrjBABgNVHSAEOTA3MDUGCSqBHIbvMgICAjAoMCYGCCsGAQUFBwIBFhpodHRwOi8vd3d3LmJqY2Eub3JnLmNuL2NwczAMBggqgRzPVQGDdQUAA0gAMEUCIG6n6PG0BOK1EdFcvetQlC+9QhpsTuTui2wkeqWiPKYWAiEAvqR8Z+tSiYR5DIs7SyHJPWZ+sa8brtQL/1jURvHGxU8=")
 	base64Input.Text = "MIICETCCAbWgAwIBAgINKl81oFaaablKOp0YTjAMBggqgRzPVQGDdQUAMGExCzAJBgNVBAYMAkNOMQ0wCwYDVQQKDARCSkNBMSUwIwYDVQQLDBxCSkNBIEFueXdyaXRlIFRydXN0IFNlcnZpY2VzMRwwGgYDVQQDDBNUcnVzdC1TaWduIFNNMiBDQS0xMB4XDTIwMDgxMzIwMTkzNFoXDTIwMTAyNDE1NTk1OVowHjELMAkGA1UEBgwCQ04xDzANBgNVBAMMBuWGr+i9rDBZMBMGByqGSM49AgEGCCqBHM9VAYItA0IABAIF97Sqq0Rv616L2PjFP3xt16QGJLmi+W8Ht+NLHiXntgUey0Nz+ZVnSUKUMzkKuGTikY3h2v7la20b6lpKo8WjgZIwgY8wCwYDVR0PBAQDAgbAMB0GA1UdDgQWBBSxiaS6z4Uguz3MepS2zblkuAF/LTAfBgNVHSMEGDAWgBTMZyRCGsP4rSes0vLlhIEf6cUvrjBABgNVHSAEOTA3MDUGCSqBHIbvMgICAjAoMCYGCCsGAQUFBwIBFhpodHRwOi8vd3d3LmJqY2Eub3JnLmNuL2NwczAMBggqgRzPVQGDdQUAA0gAMEUCIG6n6PG0BOK1EdFcvetQlC+9QhpsTuTui2wkeqWiPKYWAiEAvqR8Z+tSiYR5DIs7SyHJPWZ+sa8brtQL/1jURvHGxU8="
+	base64Input.Text = "MIIBSDCB8KADAgECAgMB4kAwCgYIKoEcz1UBg3UwHDELMAkGA1UEBhMCQ04xDTALBgNVBAMTBGFkc2YwJhcRMjQwMzE3MjMxMDAyKzA4MDAXETI2MDMxNzIzMTAwMiswODAwMCExCzAJBgNVBAYTAkNOMRIwEAYDVQQDEwlUZXN0IFJvb3QwWTATBgcqhkjOPQIBBggqgRzPVQGCLQNCAARPZooEk1LX7T2kjbwKR4Qa8EtBcRH34EUwQS+vwEngeCsasz+Fr3BTVXdKkgYm//dZ6yUBG7AIIRk6ihEM184uoxQwEjAQBgNVHRMECXRlc3QgY2VydDAKBggqgRzPVQGDdQNHADBEAiAZr2qTbd2tkVoCbypv1h6bMEJX4WRSfzlXyABpaI0e2QIgGa9qk23drZFaAm8qb9YemzBCV+FkUn85V8gAaWiNHtk="
 
 	hexInput := &widget.Entry{MultiLine: true, Wrapping: fyne.TextWrapWord}
 	hexInput.SetPlaceHolder("输入Hex的X.509证书")
@@ -85,11 +86,11 @@ func main() {
 			signAlgText.Text = err.Error()
 		}
 		signAlgText.Text = "签名算法: " + matchSignAlgFromOid(certificate.SignatureAlgorithm.Algorithm.String()) //非必填项可以跳过
-		issueText.Text = "颁发者: " + certificate.TbsCertificate.Issuer.String()
+
+		issueText.Text = "颁发者: " + certificate.TbsCertificate.Issuer.ToString()
 		validityText.Text = "有效期: " + certificate.TbsCertificate.Validity.NotBefore.Format(DateTime) + " 至 " + certificate.TbsCertificate.Validity.NotAfter.Format(DateTime)
 		serNoText.Text = "证书序列号: " + strings.ToUpper(certificate.TbsCertificate.SerialNumber.Text(16))
-		subjectText.Text = "使用者: " + certificate.TbsCertificate.Subject.String()
-
+		subjectText.Text = "使用者: " + certificate.TbsCertificate.Subject.ToString()
 		info := certificate.TbsCertificate.SubjectPublicKeyInfo
 		//ecc 1.2.840.10045.2.1
 		pubKeyAlgText.Text = "公钥算法: " + matchPublicKeyAlgFromOid(info.Algorithm.Algorithm.String())
@@ -114,11 +115,12 @@ func main() {
 		content.Add(grid)
 		content.Refresh()
 	})
-	// 创建一个按钮组件
+
+	// 创建一个关闭按钮
 	closeButton := widget.NewButton("关闭", func() {
 		myApp.Quit()
 	})
-
+	//对所有按钮进行表格化
 	allButton := container.New(layout.NewGridLayout(2), encodeButton, parseCertButton)
 	//grid.Hide()
 

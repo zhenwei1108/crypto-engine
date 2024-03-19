@@ -34,8 +34,9 @@ func Test_code_cert(t *testing.T) {
 func Test_create_cert(t *testing.T) {
 	//sm2
 	//alg := pkix.AlgorithmIdentifier{Algorithm: asn1.ObjectIdentifier{1, 2, 156, 10197, 1, 301, 1}}
-	SubjectName := pkix.Name{Country: []string{"CN"}, CommonName: "adsf"}.ToRDNSequence()
+	SubjectName := pkix.Name{Country: []string{"CN", "Test"}, CommonName: "adsf"}.ToRDNSequence()
 	IssuerName := pkix.Name{Country: []string{"CN"}, CommonName: "Test Root"}.ToRDNSequence()
+
 	notBefore := time.Now()
 	validity := engineX509.Validity{notBefore, notBefore.AddDate(2, 0, 0)}
 	//pkcs 8 的公钥
@@ -64,9 +65,9 @@ func Test_create_cert(t *testing.T) {
 	tbs := engineX509.TBSCertificate{Version: version,
 		SerialNumber:         big.NewInt(123456),
 		Signature:            signAlg,
-		Issuer:               IssuerName,
+		Issuer:               engineX509.Name(SubjectName),
 		Validity:             validity,
-		Subject:              SubjectName,
+		Subject:              engineX509.Name(IssuerName),
 		SubjectPublicKeyInfo: info,
 		Extensions:           extensions}
 
