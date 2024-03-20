@@ -41,3 +41,16 @@ type Name pkix.RDNSequence
 func (name Name) ToString() string {
 	return pkix.RDNSequence(name).String()
 }
+
+type Version asn1.RawValue
+
+func NewVersion(v int) (version Version) {
+	realVersion, _ := asn1.Marshal(v)
+	value := asn1.RawValue{
+		Class:      asn1.ClassContextSpecific,
+		Tag:        0,
+		Bytes:      realVersion,
+		IsCompound: true,
+	}
+	return Version(value)
+}
