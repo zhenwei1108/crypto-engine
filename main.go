@@ -41,17 +41,18 @@ func main() {
 	//输入Base64的X.509证书
 	base64Input.SetPlaceHolder("MIICETCCAbWgAwIBAgINKl81oFaaablKOp0YTjAMBggqgRzPVQGDdQUAMGExCzAJBgNVBAYMAkNOMQ0wCwYDVQQKDARCSkNBMSUwIwYDVQQLDBxCSkNBIEFueXdyaXRlIFRydXN0IFNlcnZpY2VzMRwwGgYDVQQDDBNUcnVzdC1TaWduIFNNMiBDQS0xMB4XDTIwMDgxMzIwMTkzNFoXDTIwMTAyNDE1NTk1OVowHjELMAkGA1UEBgwCQ04xDzANBgNVBAMMBuWGr+i9rDBZMBMGByqGSM49AgEGCCqBHM9VAYItA0IABAIF97Sqq0Rv616L2PjFP3xt16QGJLmi+W8Ht+NLHiXntgUey0Nz+ZVnSUKUMzkKuGTikY3h2v7la20b6lpKo8WjgZIwgY8wCwYDVR0PBAQDAgbAMB0GA1UdDgQWBBSxiaS6z4Uguz3MepS2zblkuAF/LTAfBgNVHSMEGDAWgBTMZyRCGsP4rSes0vLlhIEf6cUvrjBABgNVHSAEOTA3MDUGCSqBHIbvMgICAjAoMCYGCCsGAQUFBwIBFhpodHRwOi8vd3d3LmJqY2Eub3JnLmNuL2NwczAMBggqgRzPVQGDdQUAA0gAMEUCIG6n6PG0BOK1EdFcvetQlC+9QhpsTuTui2wkeqWiPKYWAiEAvqR8Z+tSiYR5DIs7SyHJPWZ+sa8brtQL/1jURvHGxU8=")
 	base64Input.Text = "MIICETCCAbWgAwIBAgINKl81oFaaablKOp0YTjAMBggqgRzPVQGDdQUAMGExCzAJBgNVBAYMAkNOMQ0wCwYDVQQKDARCSkNBMSUwIwYDVQQLDBxCSkNBIEFueXdyaXRlIFRydXN0IFNlcnZpY2VzMRwwGgYDVQQDDBNUcnVzdC1TaWduIFNNMiBDQS0xMB4XDTIwMDgxMzIwMTkzNFoXDTIwMTAyNDE1NTk1OVowHjELMAkGA1UEBgwCQ04xDzANBgNVBAMMBuWGr+i9rDBZMBMGByqGSM49AgEGCCqBHM9VAYItA0IABAIF97Sqq0Rv616L2PjFP3xt16QGJLmi+W8Ht+NLHiXntgUey0Nz+ZVnSUKUMzkKuGTikY3h2v7la20b6lpKo8WjgZIwgY8wCwYDVR0PBAQDAgbAMB0GA1UdDgQWBBSxiaS6z4Uguz3MepS2zblkuAF/LTAfBgNVHSMEGDAWgBTMZyRCGsP4rSes0vLlhIEf6cUvrjBABgNVHSAEOTA3MDUGCSqBHIbvMgICAjAoMCYGCCsGAQUFBwIBFhpodHRwOi8vd3d3LmJqY2Eub3JnLmNuL2NwczAMBggqgRzPVQGDdQUAA0gAMEUCIG6n6PG0BOK1EdFcvetQlC+9QhpsTuTui2wkeqWiPKYWAiEAvqR8Z+tSiYR5DIs7SyHJPWZ+sa8brtQL/1jURvHGxU8="
-	base64Input.Text = "MIIBSDCB8KADAgECAgMB4kAwCgYIKoEcz1UBg3UwHDELMAkGA1UEBhMCQ04xDTALBgNVBAMTBGFkc2YwJhcRMjQwMzE3MjMxMDAyKzA4MDAXETI2MDMxNzIzMTAwMiswODAwMCExCzAJBgNVBAYTAkNOMRIwEAYDVQQDEwlUZXN0IFJvb3QwWTATBgcqhkjOPQIBBggqgRzPVQGCLQNCAARPZooEk1LX7T2kjbwKR4Qa8EtBcRH34EUwQS+vwEngeCsasz+Fr3BTVXdKkgYm//dZ6yUBG7AIIRk6ihEM184uoxQwEjAQBgNVHRMECXRlc3QgY2VydDAKBggqgRzPVQGDdQNHADBEAiAZr2qTbd2tkVoCbypv1h6bMEJX4WRSfzlXyABpaI0e2QIgGa9qk23drZFaAm8qb9YemzBCV+FkUn85V8gAaWiNHtk="
+	base64Input.Text = "MIIBVzCB/aADAgECAgMB4kAwCgYIKoEcz1UBg3UwKTEYMAkGA1UEBhMCQ04wCwYDVQQGEwRUZXN0MQ0wCwYDVQQDEwRhZHNmMCYXETI0MDMyMDIyMjQzNiswODAwFxEyNjAzMjAyMjI0MzYrMDgwMDAhMQswCQYDVQQGEwJDTjESMBAGA1UEAxMJVGVzdCBSb290MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAET2aKBJNS1+09pI28CkeEGvBLQXER9+BFMEEvr8BJ4HgrGrM/ha9wU1V3SpIGJv/3WeslARuwCCEZOooRDNfOLqMUMBIwEAYDVR0TBAl0ZXN0IGNlcnQwCgYIKoEcz1UBg3UDSQAwRgIhAJdNx0/nRoczKdotf3X1hzyRtSrN3Vf55BsNmveCpIf3AiEAl03HT+dGhzMp2i1/dfWHPJG1Ks3dV/nkGw2a94Kkh/c="
 
 	hexInput := &widget.Entry{MultiLine: true, Wrapping: fyne.TextWrapWord}
 	hexInput.SetPlaceHolder("输入Hex的X.509证书")
-
+	var grid *fyne.Container
 	var certBytes []byte
 	encodeButton := widget.NewButton("Hex/Base转换", func() {
-		certBytes = getInputAboutCert(base64Input, hexInput)
+		//清空上次的数据
+		content.Remove(grid)
+		getInputAboutCert(base64Input, hexInput)
 	})
 
-	var grid *fyne.Container
 	parseCertButton := widget.NewButton("解析证书", func() {
 		//定义一个切片，用于构造表格，key-value
 		resultTable := []fyne.CanvasObject{}
@@ -183,15 +184,20 @@ func matchSignAlgFromOid(signAlgOid string) string {
 
 // 获取输入的证书信息
 func getInputAboutCert(base64Input *widget.Entry, hexInput *widget.Entry) (certBytes []byte) {
-	base64InputString := strings.ReplaceAll(base64Input.Text, " ", "")
-	hexInputString := strings.ReplaceAll(hexInput.Text, " ", "")
+	var base64InputString, hexInputString string
+	base64InputString = strings.ReplaceAll(base64Input.Text, " ", "")
+	hexInputString = strings.ReplaceAll(hexInput.Text, " ", "")
+	if util.StringIsEmpty(base64InputString) && util.StringIsEmpty(hexInputString) {
+		return nil
+	}
 	if util.StringIsEmpty(base64InputString) {
 		certBytes, _ = hex.DecodeString(hexInputString)
 		base64Input.Text = base64.StdEncoding.EncodeToString(certBytes)
-	}
-	if util.StringIsEmpty(hexInputString) {
+		base64Input.Refresh()
+	} else {
 		certBytes, _ = base64.StdEncoding.DecodeString(base64InputString)
 		hexInput.SetText(hex.EncodeToString(certBytes))
+		hexInput.Refresh()
 	}
 	return certBytes
 }
