@@ -39,12 +39,12 @@ func main() {
 
 	//input.Wrapping = fyne.text
 	//输入Base64的X.509证书
-	base64Input.SetPlaceHolder("MIICETCCAbWgAwIBAgINKl81oFaaablKOp0YTjAMBggqgRzPVQGDdQUAMGExCzAJBgNVBAYMAkNOMQ0wCwYDVQQKDARCSkNBMSUwIwYDVQQLDBxCSkNBIEFueXdyaXRlIFRydXN0IFNlcnZpY2VzMRwwGgYDVQQDDBNUcnVzdC1TaWduIFNNMiBDQS0xMB4XDTIwMDgxMzIwMTkzNFoXDTIwMTAyNDE1NTk1OVowHjELMAkGA1UEBgwCQ04xDzANBgNVBAMMBuWGr+i9rDBZMBMGByqGSM49AgEGCCqBHM9VAYItA0IABAIF97Sqq0Rv616L2PjFP3xt16QGJLmi+W8Ht+NLHiXntgUey0Nz+ZVnSUKUMzkKuGTikY3h2v7la20b6lpKo8WjgZIwgY8wCwYDVR0PBAQDAgbAMB0GA1UdDgQWBBSxiaS6z4Uguz3MepS2zblkuAF/LTAfBgNVHSMEGDAWgBTMZyRCGsP4rSes0vLlhIEf6cUvrjBABgNVHSAEOTA3MDUGCSqBHIbvMgICAjAoMCYGCCsGAQUFBwIBFhpodHRwOi8vd3d3LmJqY2Eub3JnLmNuL2NwczAMBggqgRzPVQGDdQUAA0gAMEUCIG6n6PG0BOK1EdFcvetQlC+9QhpsTuTui2wkeqWiPKYWAiEAvqR8Z+tSiYR5DIs7SyHJPWZ+sa8brtQL/1jURvHGxU8=")
+	base64Input.SetPlaceHolder("Input Base64 Data here")
 	base64Input.Text = "MIICETCCAbWgAwIBAgINKl81oFaaablKOp0YTjAMBggqgRzPVQGDdQUAMGExCzAJBgNVBAYMAkNOMQ0wCwYDVQQKDARCSkNBMSUwIwYDVQQLDBxCSkNBIEFueXdyaXRlIFRydXN0IFNlcnZpY2VzMRwwGgYDVQQDDBNUcnVzdC1TaWduIFNNMiBDQS0xMB4XDTIwMDgxMzIwMTkzNFoXDTIwMTAyNDE1NTk1OVowHjELMAkGA1UEBgwCQ04xDzANBgNVBAMMBuWGr+i9rDBZMBMGByqGSM49AgEGCCqBHM9VAYItA0IABAIF97Sqq0Rv616L2PjFP3xt16QGJLmi+W8Ht+NLHiXntgUey0Nz+ZVnSUKUMzkKuGTikY3h2v7la20b6lpKo8WjgZIwgY8wCwYDVR0PBAQDAgbAMB0GA1UdDgQWBBSxiaS6z4Uguz3MepS2zblkuAF/LTAfBgNVHSMEGDAWgBTMZyRCGsP4rSes0vLlhIEf6cUvrjBABgNVHSAEOTA3MDUGCSqBHIbvMgICAjAoMCYGCCsGAQUFBwIBFhpodHRwOi8vd3d3LmJqY2Eub3JnLmNuL2NwczAMBggqgRzPVQGDdQUAA0gAMEUCIG6n6PG0BOK1EdFcvetQlC+9QhpsTuTui2wkeqWiPKYWAiEAvqR8Z+tSiYR5DIs7SyHJPWZ+sa8brtQL/1jURvHGxU8="
 	base64Input.Text = "MIIBVzCB/aADAgECAgMB4kAwCgYIKoEcz1UBg3UwKTEYMAkGA1UEBhMCQ04wCwYDVQQGEwRUZXN0MQ0wCwYDVQQDEwRhZHNmMCYXETI0MDMyMDIyMjQzNiswODAwFxEyNjAzMjAyMjI0MzYrMDgwMDAhMQswCQYDVQQGEwJDTjESMBAGA1UEAxMJVGVzdCBSb290MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAET2aKBJNS1+09pI28CkeEGvBLQXER9+BFMEEvr8BJ4HgrGrM/ha9wU1V3SpIGJv/3WeslARuwCCEZOooRDNfOLqMUMBIwEAYDVR0TBAl0ZXN0IGNlcnQwCgYIKoEcz1UBg3UDSQAwRgIhAJdNx0/nRoczKdotf3X1hzyRtSrN3Vf55BsNmveCpIf3AiEAl03HT+dGhzMp2i1/dfWHPJG1Ks3dV/nkGw2a94Kkh/c="
 
 	hexInput := &widget.Entry{MultiLine: true, Wrapping: fyne.TextWrapWord}
-	hexInput.SetPlaceHolder("输入Hex的X.509证书")
+	hexInput.SetPlaceHolder("Input Hex Data here")
 	var grid *fyne.Container
 	var certBytes []byte
 	encodeButton := widget.NewButton("Hex/Base转换", func() {
@@ -117,10 +117,30 @@ func main() {
 		content.Refresh()
 	})
 
+	base64Input.OnChanged = func(data string) {
+		if util.StringIsEmpty(data) && util.StringIsEmpty(hexInput.Text) {
+			encodeButton.Hide()
+			parseCertButton.Hide()
+		} else {
+			encodeButton.Show()
+			parseCertButton.Show()
+		}
+	}
+
+	hexInput.OnChanged = func(data string) {
+		if util.StringIsEmpty(data) && util.StringIsEmpty(base64Input.Text) {
+			encodeButton.Hide()
+			parseCertButton.Hide()
+		} else {
+			encodeButton.Show()
+			parseCertButton.Show()
+		}
+	}
+
 	// 创建一个关闭按钮
-	closeButton := widget.NewButton("关闭", func() {
-		myApp.Quit()
-	})
+	//closeButton := widget.NewButton("关闭", func() {
+	//	myApp.Quit()
+	//})
 	//对所有按钮进行表格化
 	allButton := container.New(layout.NewGridLayout(2), encodeButton, parseCertButton)
 	//grid.Hide()
@@ -132,7 +152,7 @@ func main() {
 		base64Input,
 		hexInput,
 		allButton,
-		closeButton,
+		//closeButton,
 	)
 
 	// 将容器添加到窗口
