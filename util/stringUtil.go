@@ -6,3 +6,7 @@ func StringIsEmpty(data string) bool {
 	}
 	return false
 }
+
+func StringNotEmpty(data string) bool {
+	return !StringIsEmpty(data)
+}
