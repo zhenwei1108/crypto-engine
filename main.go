@@ -36,7 +36,6 @@ func main() {
 	var content *fyne.Container
 	//输入
 	base64Input := &widget.Entry{MultiLine: true, Wrapping: fyne.TextWrapWord}
-
 	//input.Wrapping = fyne.text
 	//输入Base64的X.509证书
 	base64Input.SetPlaceHolder("Input Base64 Data here")
@@ -147,16 +146,22 @@ func main() {
 
 	// 创建一个容器并添加组件
 	content = container.NewVBox(
-		showTime,
+		//showTime,
 		helloLabel,
 		base64Input,
 		hexInput,
 		allButton,
 		//closeButton,
+
 	)
+	check := widget.NewCheckGroup([]string{"1", "2", "3"}, func(i []string) {
+
+	})
+
+	border := container.NewBorder(showTime, nil, check, content)
 
 	// 将容器添加到窗口
-	myWindow.SetContent(content)
+	myWindow.SetContent(border)
 
 	// 显示窗口
 	myWindow.ShowAndRun()
