@@ -142,11 +142,10 @@ func main() {
 	//})
 	//对所有按钮进行表格化
 	allButton := container.New(layout.NewGridLayout(2), encodeButton, parseCertButton)
-	//grid.Hide()
 
 	// 创建一个容器并添加组件
 	content = container.NewVBox(
-		//showTime,
+		showTime,
 		helloLabel,
 		base64Input,
 		hexInput,
@@ -154,14 +153,9 @@ func main() {
 		//closeButton,
 
 	)
-	check := widget.NewCheckGroup([]string{"1", "2", "3"}, func(i []string) {
-
-	})
-
-	border := container.NewBorder(showTime, nil, check, content)
 
 	// 将容器添加到窗口
-	myWindow.SetContent(border)
+	myWindow.SetContent(content)
 
 	// 显示窗口
 	myWindow.ShowAndRun()
