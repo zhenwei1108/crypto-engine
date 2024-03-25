@@ -67,7 +67,9 @@ func main() {
 		}
 		var certificate x509.Certificate
 		_, err := asn1.Unmarshal(certBytes, &certificate)
-
+		if err != nil {
+			return
+		}
 		//签名算法标识符
 		signAlgText := canvas.NewText("", color.Black)
 		//颁发者
