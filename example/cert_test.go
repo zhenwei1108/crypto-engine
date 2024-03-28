@@ -34,7 +34,7 @@ func Test_code_cert(t *testing.T) {
 func Test_create_cert(t *testing.T) {
 	//sm2
 	//alg := pkix.AlgorithmIdentifier{Algorithm: asn1.ObjectIdentifier{1, 2, 156, 10197, 1, 301, 1}}
-	SubjectName := pkix.Name{Country: []string{"CN", "Test"}, CommonName: "adsf"}.ToRDNSequence()
+	SubjectName := pkix.Name{Country: []string{"newString"}, CommonName: "adsf汉字"}.ToRDNSequence()
 	IssuerName := pkix.Name{Country: []string{"CN"}, CommonName: "Test Root"}.ToRDNSequence()
 
 	notBefore := time.Now()
