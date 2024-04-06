@@ -6,6 +6,7 @@ import (
 	"encoding/asn1"
 	"encoding/base64"
 	"encoding/hex"
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
@@ -110,6 +111,18 @@ func main() {
 		if subjectIdBytes != nil {
 			subjectIdText.Text = "使用者标识符: " + hex.EncodeToString(subjectIdBytes)
 			resultTable = append(resultTable, subjectIdText)
+		}
+
+		extensions := certificate.TbsCertificate.Extensions
+		//index, value
+		for _, ext := range extensions {
+			switch ext.Id.String() {
+			case "2.5.29.15":
+				fmt.Println(ext.Value)
+				//密钥用途
+				break
+			}
+
 		}
 
 		//补充证书解析结果，并刷新
