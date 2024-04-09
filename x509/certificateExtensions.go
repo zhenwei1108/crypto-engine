@@ -5,8 +5,8 @@ var (
 	KEY_USAGE               = append(ID_CE, 15)
 	EXT_KEY_USAGE           = append(ID_CE, 37)
 	CERTIFICATE_POLICIES    = append(ID_CE, 32)                //证书策略
-	SUBJECT_ID              = append(ID_CE, 14)                //使用者密钥标识符
-	AUTHOR_ID               = append(ID_CE, 35)                //颁发者密钥标识符
+	SUBJECT_KEY_ID          = append(ID_CE, 14)                //使用者密钥标识符
+	AUTHOR_KEY_ID           = append(ID_CE, 35)                //颁发者密钥标识符
 	POLICY_MAPPING          = append(ID_CE, 33)                //映射策略
 	SUBJECT_ALT_NAME        = append(ID_CE, 17)                //主体替换名称
 	BASIC_CONSTRAINTS       = append(ID_CE, 19)                //基本限制
