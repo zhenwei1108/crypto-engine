@@ -85,6 +85,7 @@ func main() {
 		pubKeyText := canvas.NewText("", color.Black)
 		issueIdText := canvas.NewText("", color.Black)
 		subjectIdText := canvas.NewText("", color.Black)
+		keyUsageText := canvas.NewText("", color.Black)
 		if err != nil {
 			signAlgText.Text = err.Error()
 		}
@@ -98,10 +99,26 @@ func main() {
 		//ecc 1.2.840.10045.2.1
 		pubKeyAlgText.Text = "公钥算法: " + matchPublicKeyAlgFromOid(info.Algorithm.Algorithm.String())
 		pubKeyText.Text = "公钥: " + strings.ToUpper(hex.EncodeToString(info.SubjectPublicKey.Bytes))
+		//
+		//扩展项
+		extesions := certificate.TbsCertificate.Extensions
+		for _, extesion := range extesions {
+			id := extesion.Id
+			if id.Equal(x509.KEY_USAGE) {
+				value := extesion.Value
+				var data asn1.BitString
+				asn1.Unmarshal(value, &data)
+				usage := x509.MatchKeyUsage(data)
+				keyUsageText.Text = "密钥用途: " + usage
+			} else if id.Equal(x509.AUTHOR_KEY_ID) {
+
+			}
+		}
+
 		//optional
 		issuerIdBytes := certificate.TbsCertificate.IssuerUniqueID.Bytes
 		//展示信息排序
-		resultTable = append(resultTable, serNoText, signAlgText, issueText, subjectText, validityText, pubKeyAlgText, pubKeyText, issueIdText, subjectIdText)
+		resultTable = append(resultTable, serNoText, signAlgText, issueText, subjectText, validityText, pubKeyAlgText, pubKeyText, issueIdText, subjectIdText, keyUsageText)
 		if issuerIdBytes != nil {
 			issueIdText.Text = "颁发者标识符: " + hex.EncodeToString(issuerIdBytes)
 			resultTable = append(resultTable, issueIdText)
