@@ -23,6 +23,7 @@ var (
 
 func MatchKeyUsage(data asn1.BitString) string {
 	var usage string
+	//密钥用途占 9 位
 	for i := 0; i < 9; i++ {
 		//fmt.Println(data.At(i)) //1 1 0 0 0 0 0
 		if data.At(i) != 0 {
