@@ -1,0 +1,5 @@
+#! /bin/bash
+
+APP_NAME=CertViewer
+
+# mv /Applications/$APP_NAME  /Applications/$APP_NAME.app
