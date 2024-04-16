@@ -7,17 +7,18 @@ import (
 
 var (
 	ID_CE                   = []int{2, 5, 29}
+	SUBJECT_KEY_ID          = asn1.ObjectIdentifier(append(ID_CE, 14)) //使用者密钥标识符
 	KEY_USAGE               = asn1.ObjectIdentifier(append(ID_CE, 15))
+	SUBJECT_ALT_NAME        = asn1.ObjectIdentifier(append(ID_CE, 17)) //主体替换名称
+	BASIC_CONSTRAINTS       = asn1.ObjectIdentifier(append(ID_CE, 19)) //基本限制
+	CRL_DISTRIBUTION_POINTS = asn1.ObjectIdentifier(append(ID_CE, 31)) //CRL发布点
+	CERTIFICATE_POLICIES    = asn1.ObjectIdentifier(append(ID_CE, 32)) //证书策略
+	POLICY_MAPPING          = asn1.ObjectIdentifier(append(ID_CE, 33)) //映射策略
+	AUTHOR_KEY_ID           = asn1.ObjectIdentifier(append(ID_CE, 35)) //颁发者/授权者密钥标识符
 	EXT_KEY_USAGE           = asn1.ObjectIdentifier(append(ID_CE, 37))
-	CERTIFICATE_POLICIES    = asn1.ObjectIdentifier(append(ID_CE, 32))                //证书策略
-	SUBJECT_KEY_ID          = asn1.ObjectIdentifier(append(ID_CE, 14))                //使用者密钥标识符
-	AUTHOR_KEY_ID           = asn1.ObjectIdentifier(append(ID_CE, 35))                //颁发者密钥标识符
-	POLICY_MAPPING          = asn1.ObjectIdentifier(append(ID_CE, 33))                //映射策略
-	SUBJECT_ALT_NAME        = asn1.ObjectIdentifier(append(ID_CE, 17))                //主体替换名称
-	BASIC_CONSTRAINTS       = asn1.ObjectIdentifier(append(ID_CE, 19))                //基本限制
-	CRL_DISTRIBUTION_POINTS = asn1.ObjectIdentifier(append(ID_CE, 31))                //CRL发布点
-	IDENTIFY_CODE           = asn1.ObjectIdentifier([]int{1, 2, 156, 10260, 4, 1, 1}) //个人身份标识码
-	INSURANCE_NUMBER        = asn1.ObjectIdentifier([]int{1, 2, 156, 10260, 4, 1, 2}) //个人社会保险号
+
+	IDENTIFY_CODE    = asn1.ObjectIdentifier([]int{1, 2, 156, 10260, 4, 1, 1}) //个人身份标识码
+	INSURANCE_NUMBER = asn1.ObjectIdentifier([]int{1, 2, 156, 10260, 4, 1, 2}) //个人社会保险号
 
 )
 

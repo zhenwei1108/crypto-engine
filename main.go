@@ -85,7 +85,7 @@ func main() {
 		pubKeyText := canvas.NewText("", color.Black)
 		issueIdText := canvas.NewText("", color.Black)
 		subjectIdText := canvas.NewText("", color.Black)
-		keyUsageText := canvas.NewText("", color.Black)
+
 		if err != nil {
 			signAlgText.Text = err.Error()
 		}
@@ -99,26 +99,42 @@ func main() {
 		//ecc 1.2.840.10045.2.1
 		pubKeyAlgText.Text = "公钥算法: " + matchPublicKeyAlgFromOid(info.Algorithm.Algorithm.String())
 		pubKeyText.Text = "公钥: " + strings.ToUpper(hex.EncodeToString(info.SubjectPublicKey.Bytes))
-		//
+		//展示信息排序
+		resultTable = append(resultTable, serNoText, signAlgText, issueText, subjectText, validityText, pubKeyAlgText, pubKeyText, issueIdText, subjectIdText)
+
+		//optional
 		//扩展项
 		extesions := certificate.TbsCertificate.Extensions
 		for _, extesion := range extesions {
 			id := extesion.Id
 			if id.Equal(x509.KEY_USAGE) {
+				keyUsageText := canvas.NewText("", color.Black)
 				value := extesion.Value
 				var data asn1.BitString
 				asn1.Unmarshal(value, &data)
 				usage := x509.MatchKeyUsage(data)
 				keyUsageText.Text = "密钥用途: " + usage
+				resultTable = append(resultTable, keyUsageText)
 			} else if id.Equal(x509.AUTHOR_KEY_ID) {
+				authorKeyIdText := canvas.NewText("", color.Black)
+				authorKeyIdText.Text = "颁发者机构密钥标识符: " + hex.EncodeToString(extesion.Value)
+				resultTable = append(resultTable, authorKeyIdText)
+			} else if id.Equal(x509.SUBJECT_KEY_ID) {
+				subjectKeyIdText := canvas.NewText("", color.Black)
+				subjectKeyIdText.Text = "主体密钥标识符密钥标识符: " + hex.EncodeToString(extesion.Value)
+				resultTable = append(resultTable, subjectKeyIdText)
+			} else if id.Equal(x509.CRL_DISTRIBUTION_POINTS) {
 
+				//crlText := canvas.NewText("", color.Black)
+				//var crlPoint x509.DistributionPoint
+				//asn1.Unmarshal(extesion.Value, &crlPoint)
+				//crlText.Text = "CRL分发点: " + crlPoint.DistributionPoint.RelativeName.String()
+				//resultTable = append(resultTable, crlText)
 			}
 		}
 
 		//optional
 		issuerIdBytes := certificate.TbsCertificate.IssuerUniqueID.Bytes
-		//展示信息排序
-		resultTable = append(resultTable, serNoText, signAlgText, issueText, subjectText, validityText, pubKeyAlgText, pubKeyText, issueIdText, subjectIdText, keyUsageText)
 		if issuerIdBytes != nil {
 			issueIdText.Text = "颁发者标识符: " + hex.EncodeToString(issuerIdBytes)
 			resultTable = append(resultTable, issueIdText)

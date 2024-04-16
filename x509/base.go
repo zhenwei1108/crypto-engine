@@ -28,6 +28,17 @@ type Attribute struct {
 	AttributeValue asn1.RawValue
 }
 
+type DistributionPoint struct {
+	DistributionPoint DistributionPointName `asn1:"optional,tag:0"`
+	Reason            asn1.BitString        `asn1:"optional,tag:1"`
+	CRLIssuer         asn1.RawValue         `asn1:"optional,tag:2"`
+}
+
+type DistributionPointName struct {
+	FullName     []asn1.RawValue  `asn1:"optional,tag:0"`
+	RelativeName pkix.RDNSequence `asn1:"optional,tag:1"`
+}
+
 // pkcs8 的公钥
 type SubjectPublicKeyInfo struct {
 	Algorithm        pkix.AlgorithmIdentifier
