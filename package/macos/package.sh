@@ -18,7 +18,7 @@ go build -o $Source_Path/$APP_NAME
 
 echo "完成代码编译"
 
-mkdir -p $Target_Path
+mkdir -p $Target_Path $Scripts_Path
 cd $Target_Path
 rm -f *.pkg
 
