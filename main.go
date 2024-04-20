@@ -124,7 +124,12 @@ func main() {
 				subjectKeyIdText.Text = "主体密钥标识符密钥标识符: " + hex.EncodeToString(extesion.Value)
 				resultTable = append(resultTable, subjectKeyIdText)
 			} else if id.Equal(x509.CRL_DISTRIBUTION_POINTS) {
-
+				//todo 不完善
+				crlDistributionPointText := canvas.NewText("", color.Black)
+				var crlPoint x509.CrlDistPoints
+				asn1.Unmarshal(extesion.Value, &crlPoint)
+				fullName := crlPoint.CrlDistPoint.DistributionPoint.FullName
+				crlDistributionPointText.Text = "CRL分发点" + string(fullName[0].Bytes)
 				//crlText := canvas.NewText("", color.Black)
 				//var crlPoint x509.DistributionPoint
 				//asn1.Unmarshal(extesion.Value, &crlPoint)

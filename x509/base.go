@@ -39,10 +39,42 @@ type DistributionPointName struct {
 	RelativeName pkix.RDNSequence `asn1:"optional,tag:1"`
 }
 
+type GeneralNames struct {
+	GeneralNames []GeneralName
+}
+
+/*
+	GeneralName ::= CHOICE {
+	     otherName                       [0]     OtherName,
+	     rfc822Name                      [1]     IA5String,
+	     dNSName                         [2]     IA5String,
+	     x400Address                     [3]     ORAddress,
+	     directoryName                   [4]     Name,
+	     ediPartyName                    [5]     EDIPartyName,
+	     uniformResourceIdentifier       [6]     IA5String,
+	     iPAddress                       [7]     OCTET STRING,
+	     registeredID                    [8]     OBJECT IDENTIFIER }
+*/
+type GeneralName struct {
+	otherName     asn1.RawValue         `asn1:"tag:0,optional"`
+	rfc822Name    string                `asn1:"tag:1,optional"`
+	dNSName       string                `asn1:"tag:2,optional"`
+	x400Address   asn1.RawValue         `asn1:"tag:3,optional"`
+	directoryName asn1.RawValue         `asn1:"tag:4,optional"`
+	ediPartyName  asn1.RawValue         `asn1:"tag:5,optional"`
+	URI           asn1.BitString        `asn1:"tag:6,optional"`
+	iPAddress     asn1.BitString        `asn1:"tag:7,optional"`
+	registeredID  asn1.ObjectIdentifier `asn1:"tag:8,optional"`
+}
+
 // pkcs8 的公钥
 type SubjectPublicKeyInfo struct {
 	Algorithm        pkix.AlgorithmIdentifier
 	SubjectPublicKey asn1.BitString
+}
+
+type CrlDistPoints struct {
+	CrlDistPoint DistributionPoint
 }
 
 type Name pkix.RDNSequence
@@ -64,4 +96,34 @@ func NewVersion(v int) (version Version) {
 		IsCompound: true,
 	}
 	return Version(value)
+}
+
+type OtherName struct {
+	id    asn1.ObjectIdentifier
+	value asn1.RawValue
+}
+
+type ORAddress struct {
+	BuiltInStandardAttributes struct {
+		CountryName string `asn1:"printable"`
+		// 其他标准属性...
+	}
+	BuiltInDomainDefinedAttributes []BuiltInDomainDefinedAttribute `asn1:"optional,tag:0"`
+	ExtensionAttributes            []ExtensionAttribute            `asn1:"optional,tag:1"`
+}
+
+type BuiltInDomainDefinedAttribute struct {
+	Type  string `asn1:"printable"`
+	Value string `asn1:"printable"`
+}
+
+type ExtensionAttribute struct {
+	ExtensionAttributeType  asn1.ObjectIdentifier `asn1:""`
+	ExtensionAttributeValue asn1.RawValue         `asn1:""`
+}
+
+// 定义 EDIPartyName 结构体
+type EDIPartyName struct {
+	NameAssigner string `asn1:"optional,tag:0"`
+	PartyName    string `asn1:"tag:1"`
 }
