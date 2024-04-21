@@ -31,11 +31,11 @@ type Attribute struct {
 type DistributionPoint struct {
 	DistributionPoint DistributionPointName `asn1:"optional,tag:0"`
 	Reason            asn1.BitString        `asn1:"optional,tag:1"`
-	CRLIssuer         asn1.RawValue         `asn1:"optional,tag:2"`
+	CRLIssuer         []asn1.RawValue       `asn1:"optional,tag:2"`
 }
 
 type DistributionPointName struct {
-	FullName     []asn1.RawValue  `asn1:"optional,tag:0"`
+	FullName     GeneralNames     `asn1:"optional,tag:0"`
 	RelativeName pkix.RDNSequence `asn1:"optional,tag:1"`
 }
 
@@ -56,15 +56,15 @@ type GeneralNames struct {
 	     registeredID                    [8]     OBJECT IDENTIFIER }
 */
 type GeneralName struct {
-	otherName     asn1.RawValue         `asn1:"tag:0,optional"`
-	rfc822Name    string                `asn1:"tag:1,optional"`
-	dNSName       string                `asn1:"tag:2,optional"`
-	x400Address   asn1.RawValue         `asn1:"tag:3,optional"`
-	directoryName asn1.RawValue         `asn1:"tag:4,optional"`
-	ediPartyName  asn1.RawValue         `asn1:"tag:5,optional"`
+	OtherName     asn1.RawValue         `asn1:"tag:0,optional"`
+	Rfc822Name    string                `asn1:"tag:1,optional"`
+	DNSName       string                `asn1:"tag:2,optional"`
+	X400Address   asn1.RawValue         `asn1:"tag:3,optional"`
+	DirectoryName asn1.RawValue         `asn1:"tag:4,optional"`
+	EdiPartyName  asn1.RawValue         `asn1:"tag:5,optional"`
 	URI           asn1.BitString        `asn1:"tag:6,optional"`
-	iPAddress     asn1.BitString        `asn1:"tag:7,optional"`
-	registeredID  asn1.ObjectIdentifier `asn1:"tag:8,optional"`
+	IPAddress     asn1.BitString        `asn1:"tag:7,optional"`
+	RegisteredID  asn1.ObjectIdentifier `asn1:"tag:8,optional"`
 }
 
 // pkcs8 的公钥
@@ -74,6 +74,7 @@ type SubjectPublicKeyInfo struct {
 }
 
 type CrlDistPoints struct {
+	//todo 有点意思
 	CrlDistPoint DistributionPoint
 }
 
