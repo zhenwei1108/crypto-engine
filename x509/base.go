@@ -40,7 +40,7 @@ type DistributionPointName struct {
 }
 
 type GeneralNames struct {
-	GeneralNames []GeneralName
+	GeneralNames GeneralName
 }
 
 /*
@@ -57,14 +57,19 @@ type GeneralNames struct {
 */
 type GeneralName struct {
 	OtherName     asn1.RawValue         `asn1:"tag:0,optional"`
-	Rfc822Name    string                `asn1:"tag:1,optional"`
-	DNSName       string                `asn1:"tag:2,optional"`
+	Rfc822Name    string                `asn1:"tag:1,optional,ia5"`
+	DNSName       string                `asn1:"tag:2,optional,ia5"`
 	X400Address   asn1.RawValue         `asn1:"tag:3,optional"`
 	DirectoryName asn1.RawValue         `asn1:"tag:4,optional"`
 	EdiPartyName  asn1.RawValue         `asn1:"tag:5,optional"`
-	URI           asn1.BitString        `asn1:"tag:6,optional"`
+	URI           string                `asn1:"tag:6,optional,ia5"`
 	IPAddress     asn1.BitString        `asn1:"tag:7,optional"`
 	RegisteredID  asn1.ObjectIdentifier `asn1:"tag:8,optional"`
+}
+
+type AnotherName struct {
+	TypeID asn1.ObjectIdentifier
+	Value  asn1.RawValue `asn1:"tag:0"`
 }
 
 // pkcs8 的公钥
