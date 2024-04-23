@@ -112,3 +112,17 @@ type EDIPartyName struct {
 	NameAssigner string `asn1:"optional,tag:0"`
 	PartyName    string `asn1:"tag:1"`
 }
+
+// 匹配各类型并重新构造
+func (name GeneralName) Matcher() (string, error) {
+	if name.DirectoryName.Bytes != nil {
+		var result Name
+		_, err := asn1.Unmarshal(name.DirectoryName.Bytes, &result)
+		return "DirectoryName = " + result.ToString(), err
+	}
+	if name.URI != "" {
+		return "URI = " + name.URI, nil
+	}
+	return "", nil
+
+}

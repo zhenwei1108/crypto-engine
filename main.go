@@ -6,7 +6,6 @@ import (
 	"encoding/asn1"
 	"encoding/base64"
 	"encoding/hex"
-	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
@@ -58,7 +57,7 @@ func main() {
 		resultTable := []fyne.CanvasObject{}
 		//清空上次的数据
 		content.Remove(grid)
-
+		content.Refresh()
 		//输入为空，则什么都不处理
 		if util.BytesIsEmpty(certBytes) {
 			certBytes = getInputAboutCert(base64Input, hexInput)
@@ -124,12 +123,20 @@ func main() {
 				subjectKeyIdText.Text = "主体密钥标识符密钥标识符: " + hex.EncodeToString(extesion.Value)
 				resultTable = append(resultTable, subjectKeyIdText)
 			} else if id.Equal(x509.CRL_DISTRIBUTION_POINTS) {
-				//todo 不完善
-				crlDistributionPointText := canvas.NewText("", color.Black)
-				var crlPoint x509.CrlDistPoints
-				asn1.Unmarshal(extesion.Value, &crlPoint)
-				fullName := crlPoint.CrlDistPoint.DistributionPoint.FullName
-				crlDistributionPointText.Text = "CRL分发点" + string(fullName[0].Bytes)
+
+				var distributionPoints []x509.DistributionPoint
+				asn1.Unmarshal(extesion.Value, &distributionPoints)
+				//sequence
+				for _, distributionPoint := range distributionPoints {
+					name := distributionPoint.DistributionPointName.FullName
+					result, err := name.Matcher()
+					if err == nil {
+						crlDistributionPointText := canvas.NewText("", color.Black)
+						crlDistributionPointText.Text = "CRL分发点," + result
+						resultTable = append(resultTable, crlDistributionPointText)
+					}
+				}
+
 				//crlText := canvas.NewText("", color.Black)
 				//var crlPoint x509.DistributionPoint
 				//asn1.Unmarshal(extesion.Value, &crlPoint)
@@ -149,18 +156,6 @@ func main() {
 		if subjectIdBytes != nil {
 			subjectIdText.Text = "使用者标识符: " + hex.EncodeToString(subjectIdBytes)
 			resultTable = append(resultTable, subjectIdText)
-		}
-
-		extensions := certificate.TbsCertificate.Extensions
-		//index, value
-		for _, ext := range extensions {
-			switch ext.Id.String() {
-			case "2.5.29.15":
-				fmt.Println(ext.Value)
-				//密钥用途
-				break
-			}
-
 		}
 
 		//补充证书解析结果，并刷新
