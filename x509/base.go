@@ -29,32 +29,16 @@ type Attribute struct {
 }
 
 type DistributionPoint struct {
-	DistributionPoint DistributionPointName `asn1:"optional,tag:0"`
-	Reason            asn1.BitString        `asn1:"optional,tag:1"`
-	CRLIssuer         []asn1.RawValue       `asn1:"optional,tag:2"`
+	DistributionPointName DistributionPointName `asn1:"optional,tag:0"`
+	Reason                []bool                `asn1:"optional,tag:1"`
+	CRLIssuer             GeneralName           `asn1:"optional,tag:2"`
 }
 
 type DistributionPointName struct {
-	FullName     GeneralNames     `asn1:"optional,tag:0"`
+	FullName     GeneralName      `asn1:"optional,tag:0"`
 	RelativeName pkix.RDNSequence `asn1:"optional,tag:1"`
 }
 
-type GeneralNames struct {
-	GeneralNames GeneralName
-}
-
-/*
-	GeneralName ::= CHOICE {
-	     otherName                       [0]     OtherName,
-	     rfc822Name                      [1]     IA5String,
-	     dNSName                         [2]     IA5String,
-	     x400Address                     [3]     ORAddress,
-	     directoryName                   [4]     Name,
-	     ediPartyName                    [5]     EDIPartyName,
-	     uniformResourceIdentifier       [6]     IA5String,
-	     iPAddress                       [7]     OCTET STRING,
-	     registeredID                    [8]     OBJECT IDENTIFIER }
-*/
 type GeneralName struct {
 	OtherName     asn1.RawValue         `asn1:"tag:0,optional"`
 	Rfc822Name    string                `asn1:"tag:1,optional,ia5"`
@@ -76,11 +60,6 @@ type AnotherName struct {
 type SubjectPublicKeyInfo struct {
 	Algorithm        pkix.AlgorithmIdentifier
 	SubjectPublicKey asn1.BitString
-}
-
-type CrlDistPoints struct {
-	//todo 有点意思
-	CrlDistPoint DistributionPoint
 }
 
 type Name pkix.RDNSequence
