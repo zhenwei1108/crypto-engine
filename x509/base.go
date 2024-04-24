@@ -123,6 +123,12 @@ func (name GeneralName) Matcher() (string, error) {
 	if name.URI != "" {
 		return "URI = " + name.URI, nil
 	}
+	if name.DNSName != "" {
+		return "DNSName = " + name.DNSName, nil
+	}
+	if name.IPAddress.Bytes != nil {
+		return string(name.IPAddress.Bytes), nil
+	}
 	return "", nil
 
 }

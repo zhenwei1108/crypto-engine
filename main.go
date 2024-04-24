@@ -129,6 +129,7 @@ func main() {
 				//sequence
 				for _, distributionPoint := range distributionPoints {
 					name := distributionPoint.DistributionPointName.FullName
+					//具体扩展匹配
 					result, err := name.Matcher()
 					if err == nil {
 						crlDistributionPointText := canvas.NewText("", color.Black)
@@ -137,11 +138,6 @@ func main() {
 					}
 				}
 
-				//crlText := canvas.NewText("", color.Black)
-				//var crlPoint x509.DistributionPoint
-				//asn1.Unmarshal(extesion.Value, &crlPoint)
-				//crlText.Text = "CRL分发点: " + crlPoint.DistributionPoint.RelativeName.String()
-				//resultTable = append(resultTable, crlText)
 			}
 		}
 
