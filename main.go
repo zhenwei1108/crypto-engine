@@ -82,8 +82,6 @@ func main() {
 		serNoText := canvas.NewText("", color.Black)
 		pubKeyAlgText := canvas.NewText("", color.Black)
 		pubKeyText := canvas.NewText("", color.Black)
-		issueIdText := canvas.NewText("", color.Black)
-		subjectIdText := canvas.NewText("", color.Black)
 
 		if err != nil {
 			signAlgText.Text = err.Error()
@@ -99,7 +97,7 @@ func main() {
 		pubKeyAlgText.Text = "公钥算法: " + matchPublicKeyAlgFromOid(info.Algorithm.Algorithm.String())
 		pubKeyText.Text = "公钥: " + strings.ToUpper(hex.EncodeToString(info.SubjectPublicKey.Bytes))
 		//展示信息排序
-		resultTable = append(resultTable, serNoText, signAlgText, issueText, subjectText, validityText, pubKeyAlgText, pubKeyText, issueIdText, subjectIdText)
+		resultTable = append(resultTable, serNoText, signAlgText, issueText, subjectText, validityText, pubKeyAlgText, pubKeyText)
 
 		//optional
 		//扩展项
@@ -107,12 +105,11 @@ func main() {
 		for _, extesion := range extesions {
 			id := extesion.Id
 			if id.Equal(x509.KEY_USAGE) {
-				keyUsageText := canvas.NewText("", color.Black)
 				value := extesion.Value
 				var data asn1.BitString
 				asn1.Unmarshal(value, &data)
 				usage := x509.MatchKeyUsage(data)
-				keyUsageText.Text = "密钥用途: " + usage
+				keyUsageText := canvas.NewText("密钥用途: "+usage, color.Black)
 				resultTable = append(resultTable, keyUsageText)
 			} else if id.Equal(x509.AUTHOR_KEY_ID) {
 				authorKeyIdText := canvas.NewText("", color.Black)
@@ -144,13 +141,13 @@ func main() {
 		//optional
 		issuerIdBytes := certificate.TbsCertificate.IssuerUniqueID.Bytes
 		if issuerIdBytes != nil {
-			issueIdText.Text = "颁发者标识符: " + hex.EncodeToString(issuerIdBytes)
+			issueIdText := canvas.NewText("颁发者标识符: "+hex.EncodeToString(issuerIdBytes), color.Black)
 			resultTable = append(resultTable, issueIdText)
 		}
 
 		subjectIdBytes := certificate.TbsCertificate.SubjectUniqueID.Bytes
 		if subjectIdBytes != nil {
-			subjectIdText.Text = "使用者标识符: " + hex.EncodeToString(subjectIdBytes)
+			subjectIdText := canvas.NewText("使用者标识符: "+hex.EncodeToString(subjectIdBytes), color.Black)
 			resultTable = append(resultTable, subjectIdText)
 		}
 
