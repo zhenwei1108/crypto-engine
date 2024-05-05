@@ -70,23 +70,26 @@ func main() {
 		if err != nil {
 			return
 		}
-		//签名算法标识符
-		signAlgText := canvas.NewText("", color.Black)
-		//颁发者
-		issueText := canvas.NewText("", color.Black)
-		issueText.TextStyle = fyne.TextStyle{Italic: true, Bold: true}
-		subjectText := canvas.NewText("", color.Black)
-		//有效期
-		validityText := canvas.NewText("", color.Black)
 
-		serNoText := canvas.NewText("", color.Black)
-		pubKeyAlgText := canvas.NewText("", color.Black)
-		pubKeyText := canvas.NewText("", color.Black)
+		//签名算法标识符
+		body := widget.NewEntry()
+		head := canvas.NewText("签名算法: ", color.Black)
+		signAlgText := container.New(layout.NewGridLayout(2), head, body)
+		//颁发者
+		issueText := widget.NewEntry()
+		issueText.TextStyle = fyne.TextStyle{Italic: true, Bold: true}
+		subjectText := widget.NewEntry()
+		//有效期
+		validityText := widget.NewEntry()
+
+		serNoText := widget.NewEntry()
+		pubKeyAlgText := widget.NewEntry()
+		pubKeyText := widget.NewEntry()
 
 		if err != nil {
-			signAlgText.Text = err.Error()
+			body.Text = err.Error()
 		}
-		signAlgText.Text = "签名算法: " + matchSignAlgFromOid(certificate.SignatureAlgorithm.Algorithm.String()) //非必填项可以跳过
+		body.Text = "" + matchSignAlgFromOid(certificate.SignatureAlgorithm.Algorithm.String()) //非必填项可以跳过
 
 		issueText.Text = "颁发者: " + certificate.TbsCertificate.Issuer.ToString()
 		validityText.Text = "有效期: " + certificate.TbsCertificate.Validity.NotBefore.Format(DateTime) + " 至 " + certificate.TbsCertificate.Validity.NotAfter.Format(DateTime)
