@@ -39,8 +39,8 @@ func main() {
 	//input.Wrapping = fyne.text
 	//输入Base64的X.509证书
 	base64Input.SetPlaceHolder("Input Base64 Data here")
-	//base64Input.Text = "MIICETCCAbWgAwIBAgINKl81oFaaablKOp0YTjAMBggqgRzPVQGDdQUAMGExCzAJBgNVBAYMAkNOMQ0wCwYDVQQKDARCSkNBMSUwIwYDVQQLDBxCSkNBIEFueXdyaXRlIFRydXN0IFNlcnZpY2VzMRwwGgYDVQQDDBNUcnVzdC1TaWduIFNNMiBDQS0xMB4XDTIwMDgxMzIwMTkzNFoXDTIwMTAyNDE1NTk1OVowHjELMAkGA1UEBgwCQ04xDzANBgNVBAMMBuWGr+i9rDBZMBMGByqGSM49AgEGCCqBHM9VAYItA0IABAIF97Sqq0Rv616L2PjFP3xt16QGJLmi+W8Ht+NLHiXntgUey0Nz+ZVnSUKUMzkKuGTikY3h2v7la20b6lpKo8WjgZIwgY8wCwYDVR0PBAQDAgbAMB0GA1UdDgQWBBSxiaS6z4Uguz3MepS2zblkuAF/LTAfBgNVHSMEGDAWgBTMZyRCGsP4rSes0vLlhIEf6cUvrjBABgNVHSAEOTA3MDUGCSqBHIbvMgICAjAoMCYGCCsGAQUFBwIBFhpodHRwOi8vd3d3LmJqY2Eub3JnLmNuL2NwczAMBggqgRzPVQGDdQUAA0gAMEUCIG6n6PG0BOK1EdFcvetQlC+9QhpsTuTui2wkeqWiPKYWAiEAvqR8Z+tSiYR5DIs7SyHJPWZ+sa8brtQL/1jURvHGxU8="
-	//base64Input.Text = "MIIBVzCB/aADAgECAgMB4kAwCgYIKoEcz1UBg3UwKTEYMAkGA1UEBhMCQ04wCwYDVQQGEwRUZXN0MQ0wCwYDVQQDEwRhZHNmMCYXETI0MDMyMDIyMjQzNiswODAwFxEyNjAzMjAyMjI0MzYrMDgwMDAhMQswCQYDVQQGEwJDTjESMBAGA1UEAxMJVGVzdCBSb290MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAET2aKBJNS1+09pI28CkeEGvBLQXER9+BFMEEvr8BJ4HgrGrM/ha9wU1V3SpIGJv/3WeslARuwCCEZOooRDNfOLqMUMBIwEAYDVR0TBAl0ZXN0IGNlcnQwCgYIKoEcz1UBg3UDSQAwRgIhAJdNx0/nRoczKdotf3X1hzyRtSrN3Vf55BsNmveCpIf3AiEAl03HT+dGhzMp2i1/dfWHPJG1Ks3dV/nkGw2a94Kkh/c="
+	base64Input.Text = "MIICETCCAbWgAwIBAgINKl81oFaaablKOp0YTjAMBggqgRzPVQGDdQUAMGExCzAJBgNVBAYMAkNOMQ0wCwYDVQQKDARCSkNBMSUwIwYDVQQLDBxCSkNBIEFueXdyaXRlIFRydXN0IFNlcnZpY2VzMRwwGgYDVQQDDBNUcnVzdC1TaWduIFNNMiBDQS0xMB4XDTIwMDgxMzIwMTkzNFoXDTIwMTAyNDE1NTk1OVowHjELMAkGA1UEBgwCQ04xDzANBgNVBAMMBuWGr+i9rDBZMBMGByqGSM49AgEGCCqBHM9VAYItA0IABAIF97Sqq0Rv616L2PjFP3xt16QGJLmi+W8Ht+NLHiXntgUey0Nz+ZVnSUKUMzkKuGTikY3h2v7la20b6lpKo8WjgZIwgY8wCwYDVR0PBAQDAgbAMB0GA1UdDgQWBBSxiaS6z4Uguz3MepS2zblkuAF/LTAfBgNVHSMEGDAWgBTMZyRCGsP4rSes0vLlhIEf6cUvrjBABgNVHSAEOTA3MDUGCSqBHIbvMgICAjAoMCYGCCsGAQUFBwIBFhpodHRwOi8vd3d3LmJqY2Eub3JnLmNuL2NwczAMBggqgRzPVQGDdQUAA0gAMEUCIG6n6PG0BOK1EdFcvetQlC+9QhpsTuTui2wkeqWiPKYWAiEAvqR8Z+tSiYR5DIs7SyHJPWZ+sa8brtQL/1jURvHGxU8="
+	base64Input.Text = "MIIBVzCB/aADAgECAgMB4kAwCgYIKoEcz1UBg3UwKTEYMAkGA1UEBhMCQ04wCwYDVQQGEwRUZXN0MQ0wCwYDVQQDEwRhZHNmMCYXETI0MDMyMDIyMjQzNiswODAwFxEyNjAzMjAyMjI0MzYrMDgwMDAhMQswCQYDVQQGEwJDTjESMBAGA1UEAxMJVGVzdCBSb290MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAET2aKBJNS1+09pI28CkeEGvBLQXER9+BFMEEvr8BJ4HgrGrM/ha9wU1V3SpIGJv/3WeslARuwCCEZOooRDNfOLqMUMBIwEAYDVR0TBAl0ZXN0IGNlcnQwCgYIKoEcz1UBg3UDSQAwRgIhAJdNx0/nRoczKdotf3X1hzyRtSrN3Vf55BsNmveCpIf3AiEAl03HT+dGhzMp2i1/dfWHPJG1Ks3dV/nkGw2a94Kkh/c="
 
 	hexInput := &widget.Entry{MultiLine: true, Wrapping: fyne.TextWrapWord}
 	hexInput.SetPlaceHolder("Input Hex Data here")
@@ -76,7 +76,13 @@ func main() {
 		head := canvas.NewText("签名算法: ", color.Black)
 		signAlgText := container.New(layout.NewGridLayout(2), head, body)
 		//颁发者
-		issueText := widget.NewEntry()
+		issueText := &widget.Entry{MultiLine: true, Wrapping: fyne.TextWrapWord}
+		issueTextTitle := widget.NewLabel("颁发者: ")
+		issueBox := container.NewHBox(issueTextTitle, issueText)
+		size := issueBox.Size()
+		size.Width = 2002
+		size.Height = 2002
+		issueBox.Refresh()
 		issueText.TextStyle = fyne.TextStyle{Italic: true, Bold: true}
 		subjectText := widget.NewEntry()
 		//有效期
@@ -100,7 +106,7 @@ func main() {
 		pubKeyAlgText.Text = "公钥算法: " + matchPublicKeyAlgFromOid(info.Algorithm.Algorithm.String())
 		pubKeyText.Text = "公钥: " + strings.ToUpper(hex.EncodeToString(info.SubjectPublicKey.Bytes))
 		//展示信息排序
-		resultTable = append(resultTable, serNoText, signAlgText, issueText, subjectText, validityText, pubKeyAlgText, pubKeyText)
+		resultTable = append(resultTable, serNoText, signAlgText, issueBox, subjectText, validityText, pubKeyAlgText, pubKeyText)
 
 		//optional
 		//扩展项
